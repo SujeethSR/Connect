@@ -6,15 +6,22 @@ import { AuthProvider, useAuth } from "../context/authcontext";
 
 const MainLayout = () => {
   const { isAuthenticated } = useAuth();
-  const segments = useSegments();
   const router = useRouter();
   useEffect(() => {
     // check if user is authenticated or not
     if (typeof isAuthenticated === "undefined") return;
 
     if (isAuthenticated) {
+      while (router.canGoBack()) {
+        // Pop from stack until one element is left
+        router.back();
+      }
       router.replace("/map");
     } else if (isAuthenticated === false) {
+      while (router.canGoBack()) {
+        // Pop from stack until one element is left
+        router.back();
+      }
       router.replace("/signin");
     }
   }, [isAuthenticated]);

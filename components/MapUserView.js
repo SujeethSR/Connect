@@ -15,25 +15,39 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { router } from "expo-router";
+import { goToMaps } from "../constants/helpers";
+import dayjs from "dayjs";
+var relativeTime = require("dayjs/plugin/relativeTime");
+
+dayjs.extend(relativeTime);
 
 const MapUserView = ({ user, index, handleInfoClick }) => {
   return (
     <View
       className="rounded-lg flex-row relative"
       style={{
-        width: wp(90),
+        width: wp(88),
         height: hp(16),
         margin: 5,
         borderRadius: 10,
       }}
     >
       <Pressable
-        className="absolute top-2 z-10"
+        className="absolute top-4 z-10 items-center justify-center"
         style={{ right: 10 }}
         onPress={() => {
-          goToMaps({ latitude: user.latitude, longitude: user.longitude });
+          goToMaps({
+            latitude: user?.location?.latitude,
+            longitude: user?.location?.longitude,
+          });
         }}
       >
+        {user?.location && (
+          <Text className=" text-gray-500 text-xs mb-4">
+            ({dayjs(user?.location?.timestamp?.seconds * 1000).fromNow()})
+          </Text>
+        )}
         <FontAwesome5 name="directions" size={30} color="#1a73e8" />
       </Pressable>
       <TouchableOpacity
@@ -48,7 +62,9 @@ const MapUserView = ({ user, index, handleInfoClick }) => {
             borderRadius: 4,
             backgroundColor: "#0553",
           }}
-          source="https://picsum.photos/seed/696/3000/2000"
+          source={
+            user?.profileUrl || "https://picsum.photos/seed/696/3000/2000"
+          }
           placeholder={blurhash}
           transition={500}
         />
@@ -61,14 +77,27 @@ const MapUserView = ({ user, index, handleInfoClick }) => {
           borderBottomRightRadius: 10,
         }}
       >
-        <Text className="font-bold text-lg">{user.title}</Text>
+        <Text className="font-bold text-lg">{user.name} </Text>
+
         <Text className="text-xs">
-          Major: <Text className="font-bold">Test 1</Text>
+          Major:
+          <Text className="font-bold">
+            {user?.location?.timestamp?.seconds}
+          </Text>
         </Text>
         <View className="flex-row justify-between">
           <Pressable
             className="bg-black rounded-md ml-auto"
-            // onPress={handleSignIn}
+            onPress={() => {
+              router.push(
+                "/chat?name=" +
+                  user.name +
+                  "&id=" +
+                  user.id +
+                  "&profileUrl=" +
+                  user?.profileUrl
+              );
+            }}
           >
             <Text
               className="text-white font-bold tracking-wide text-sm text-center rounded-md"
@@ -79,7 +108,10 @@ const MapUserView = ({ user, index, handleInfoClick }) => {
           </Pressable>
           <Pressable
             className="bg-blue-500 rounded-md  "
-            // onPress={handleSignIn}
+            onPress={() => {
+              // set the user to the router params and navigate to profile route
+              router.push("/profile?friend=" + user.name);
+            }}
           >
             <Text
               className="text-white font-bold tracking-wide text-sm text-center rounded-md"
@@ -95,14 +127,3 @@ const MapUserView = ({ user, index, handleInfoClick }) => {
 };
 
 export default MapUserView;
-const goToMaps = ({ latitude, longitude }) => {
-  const scheme = Platform.select({ ios: "maps:0,0?q=", android: "geo:0,0?q=" });
-  const latLng = `${latitude},${longitude}`;
-  const label = "";
-  const url = Platform.select({
-    ios: `${scheme}${label}@${latLng}&dirflg=w&t=m`,
-    android: `${scheme}${latLng}(${label})&dirflg=w&t=m`,
-  });
-
-  Linking.openURL(url);
-};

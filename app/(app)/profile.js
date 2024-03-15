@@ -19,27 +19,75 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { blurhash } from "../../constants";
 import Loading from "../../components/Loading";
 import CustomKeyboardView from "../../components/CustomKeybordView";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { AuthContext } from "../../context/authcontext";
+import ProfileImage from "../../components/ProflieImage";
 const ios = Platform.OS === "ios";
 
 const Profile = () => {
   const { top } = useSafeAreaInsets();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const admin = true;
   const handleClose = () => {
     router.back();
   };
-  const { logout } = useContext(AuthContext);
+  const { logout, user, setUser } = useContext(AuthContext);
+  const [updateImage, setUpdateImage] = useState(false);
+  const { friend } = useLocalSearchParams();
+  const newUserExtract = friend ? friend : null;
+  const upateProfile = (url) => {
+    setUpdateImage(false);
 
-  if (admin)
+    setUser((user) => {
+      return { ...user, profileUrl: url };
+    });
+  };
+  console.log(friend);
+
+  if (newUserExtract)
+    return (
+      <View
+        style={{
+          paddingTop: ios ? top : top + 10,
+          paddingHorizontal: 20,
+          flex: 1,
+        }}
+      >
+        <Pressable className="self-end" onPress={handleClose}>
+          <MaterialCommunityIcons name="close" size={30} color="black" />
+        </Pressable>
+        <Text className="text-2xl font-bold text-center">{friend}</Text>
+
+        <View className="flex-row justify-center my-4">
+          <Image
+            style={{
+              height: hp(35),
+              aspectRatio: 1,
+              borderRadius: 4,
+              backgroundColor: "#0553",
+            }}
+            source="https://picsum.photos/seed/696/3000/2000"
+            placeholder={blurhash}
+            transition={500}
+          />
+        </View>
+
+        <View className="flex-1 gap-4">
+          <Text className="font-bold">Majors: </Text>
+
+          <Text className="font-bold">Department: </Text>
+
+          <Text className="font-bold">Description: </Text>
+        </View>
+      </View>
+    );
+  else {
     return (
       <CustomKeyboardView>
         <View
           style={{
             paddingTop: ios ? top : top + 10,
-            paddingHorizontal: 20,
+            padding: 20,
             flex: 1,
           }}
         >
@@ -52,21 +100,53 @@ const Profile = () => {
             </Pressable>
           </View>
 
-          <Text className="text-2xl font-bold text-center">Profile Name</Text>
+          <Text className="text-2xl font-bold text-center">{user?.email}</Text>
 
-          <View className="flex-row justify-center my-4">
-            <Image
+          {updateImage === false ? (
+            <>
+              <View className="flex-row justify-center my-4">
+                <Image
+                  style={{
+                    height: hp(35),
+                    aspectRatio: 1,
+                    borderRadius: 4,
+                    backgroundColor: "#0553",
+                  }}
+                  source={
+                    user?.profileUrl
+                      ? user?.profileUrl
+                      : "https://picsum.photos/seed/696/3000/2000"
+                  }
+                  placeholder={blurhash}
+                  transition={500}
+                />
+              </View>
+              <View className="flex-row justify-center">
+                <Pressable
+                  className="bg-black rounded-md w-2/4 "
+                  onPress={() => {
+                    setUpdateImage(true);
+                  }}
+                >
+                  <Text
+                    style={{ fontSize: hp(1.8) }}
+                    className="text-white font-bold tracking-wide text-center p-2 rounded-md"
+                  >
+                    Update Image
+                  </Text>
+                </Pressable>
+              </View>
+            </>
+          ) : (
+            <View
               style={{
-                height: hp(35),
-                aspectRatio: 1,
-                borderRadius: 4,
-                backgroundColor: "#0553",
+                minHeight: hp(35),
+                paddingBottom: 20,
               }}
-              source="https://picsum.photos/seed/696/3000/2000"
-              placeholder={blurhash}
-              transition={500}
-            />
-          </View>
+            >
+              <ProfileImage id={user.id} upateProfile={upateProfile} />
+            </View>
+          )}
 
           <View className="flex-1 gap-4">
             <Text className="font-bold">Majors</Text>
@@ -105,7 +185,7 @@ const Profile = () => {
                     style={{ fontSize: hp(2.2) }}
                     className="text-white font-bold tracking-wide text-center p-2 rounded-md"
                   >
-                    Sign In
+                    Save
                   </Text>
                 </Pressable>
               )}
@@ -113,43 +193,6 @@ const Profile = () => {
           </View>
         </View>
       </CustomKeyboardView>
-    );
-  else {
-    return (
-      <View
-        style={{
-          paddingTop: ios ? top : top + 10,
-          paddingHorizontal: 20,
-          flex: 1,
-        }}
-      >
-        <Pressable className="self-end" onPress={handleClose}>
-          <MaterialCommunityIcons name="close" size={30} color="black" />
-        </Pressable>
-        <Text className="text-2xl font-bold text-center">Profile Name</Text>
-
-        <View className="flex-row justify-center my-4">
-          <Image
-            style={{
-              height: hp(35),
-              aspectRatio: 1,
-              borderRadius: 4,
-              backgroundColor: "#0553",
-            }}
-            source="https://picsum.photos/seed/696/3000/2000"
-            placeholder={blurhash}
-            transition={500}
-          />
-        </View>
-
-        <View className="flex-1 gap-4">
-          <Text className="font-bold">Majors: </Text>
-
-          <Text className="font-bold">Department: </Text>
-
-          <Text className="font-bold">Description: </Text>
-        </View>
-      </View>
     );
   }
 };

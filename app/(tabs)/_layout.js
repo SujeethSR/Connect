@@ -1,15 +1,13 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import Colors from "../../constants/Colors";
-import { Text } from "react-native";
 import HomeHeader from "../../components/HomeHeader";
-import { Feather } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
-import { LocationProvider } from "../../context/locationContext";
+import { AntDesign } from "@expo/vector-icons";
 
 export default function TabsLayout() {
   return (
-    <LocationProvider>
+    <>
       <HomeHeader />
       <Tabs
         screenOptions={{
@@ -28,6 +26,11 @@ export default function TabsLayout() {
           options={{
             headerTitle: "Messages",
             title: "Messages",
+            headerTitleAlign: "center",
+            //change header font family
+            headerTitleStyle: {
+              fontFamily: "Poppins-Bold",
+            },
             tabBarIcon: ({ size, color }) => (
               <Entypo name="chat" size={size} color={color} />
             ),
@@ -49,12 +52,29 @@ export default function TabsLayout() {
           options={{
             headerTitle: "Rooms",
             title: "Rooms",
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              fontFamily: "Poppins-Bold",
+            },
+            // add icon at the right side of the header
+            headerRight: () => (
+              <AntDesign
+                name="addusergroup"
+                size={28}
+                color={Colors.primary}
+                style={{ marginRight: 20 }}
+                onPress={() => {
+                  console.log("add user group");
+                }}
+              />
+            ),
+
             tabBarIcon: ({ size, color }) => (
               <MaterialIcons name="groups" size={size + 5} color={color} />
             ),
           }}
         />
       </Tabs>
-    </LocationProvider>
+    </>
   );
 }

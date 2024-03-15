@@ -1,29 +1,60 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import { FlatList, Pressable, StyleSheet, View } from "react-native";
 import {
-  Dimensions,
-  FlatList,
-  Pressable,
-  StyleSheet,
-  View,
-} from "react-native";
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 import MapUserView from "../../components/MapUserView";
-import { markers } from "../../constants/data";
-import { LocationContext } from "../../context/locationContext";
-import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
+import { AuthContext } from "../../context/authcontext";
+import {
+  collection,
+  getDocs,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
+import { db } from "../../firebase";
+let count = 0;
 export default function Map() {
   const [selectedMarker, setSelectedMarker] = useState("");
-  const { location } = useContext(LocationContext);
+  const { location, user } = useContext(AuthContext);
 
-  const [timer, setTimer] = useState(null);
+  const [users, setUsers] = useState([]);
+  const [markers, setMarkers] = useState([]);
 
   const flatListRef = useRef(null);
+
+  const [timer, setTimer] = useState(null);
+  const [showInfo, setShowInfo] = useState(false);
+
+  const deg2rad = (deg) => {
+    return deg * (Math.PI / 180);
+  };
+
+  const getDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371000; // Radius of the earth in meters
+    const dLat = deg2rad(lat2 - lat1);
+    const dLon = deg2rad(lon2 - lon1);
+
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(deg2rad(lat1)) *
+        Math.cos(deg2rad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c; // Distance in meters
+    console.log("Distance", distance);
+    return distance;
+  };
 
   const scrollToIndex = (index) => {
     flatListRef.current.scrollToIndex({ animated: true, index });
   };
 
-  const [showInfo, setShowInfo] = useState(false);
   const handleMarkerPress = (index) => {
     setSelectedMarker(index);
 
@@ -43,7 +74,7 @@ export default function Map() {
   };
   const mapRef = useRef(null);
 
-  const markerRefs = markers.map(() => useRef(null));
+  const markerRefs = Array.from({ length: 20 }, () => useRef(null));
 
   const handleInfoClick = (index) => {
     if (
@@ -52,61 +83,116 @@ export default function Map() {
       markerRefs[index].current.showCallout
     ) {
       setSelectedMarker(index);
-
       // center map to this marker location
       mapRef.current.animateToRegion({
-        latitude: markers[index].latitude,
-        longitude: markers[index].longitude,
+        latitude: markers[index].location.latitude,
+        longitude: markers[index].location.longitude,
         latitudeDelta: 0.001,
         longitudeDelta: 0.0016,
       });
     }
   };
 
-  // const deg2rad = (deg) => {
-  //   return deg * (Math.PI / 180);
-  // };
+  useEffect(() => {
+    if (!user?.id) return;
 
-  // const getDistance = (lat1, lon1, lat2, lon2) => {
-  //   const R = 6371000; // Radius of the earth in meters
-  //   const dLat = deg2rad(lat2 - lat1);
-  //   const dLon = deg2rad(lon2 - lon1);
+    (async () => {
+      const q = query(collection(db, "users"), where("id", "!=", user?.id));
+      const users = [];
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        users.push(doc.data());
+      });
+      setUsers(users);
+    })();
+  }, [user]);
 
-  //   const a =
-  //     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-  //     Math.cos(deg2rad(lat1)) *
-  //       Math.cos(deg2rad(lat2)) *
-  //       Math.sin(dLon / 2) *
-  //       Math.sin(dLon / 2);
+  //memoize the markers array to avoid unnecessary re-renders
+  useEffect(() => {
+    if (users.length === 0) return;
 
-  //   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  //   const distance = R * c; // Distance in meters
-  //   console.log("Distance", distance);
-  //   return distance;
-  // };
+    console.log("Render Count => ", count++);
+    setMarkers((prevMarkers) => {
+      const updatedMarkers = users.filter((user) => {
+        const lat = new RegExp("^[-+]?([1-8]?\\d(\\.\\d+)?|90(\\.0+)?)$");
+        const long = new RegExp(
+          "^[-+]?(180(\\.0+)?|((1[0-7]\\d)|([1-9]?\\d))(\\.\\d+)?)$"
+        );
+        return (
+          user?.location &&
+          lat.test(user.location.latitude) &&
+          long.test(user.location.longitude)
+          // &&
+          // getDistance(
+          //   location.coords.latitude,
+          //   location.coords.longitude,
+          //   user.location.latitude,
+          //   user.location.longitude
+          // ) <= 1000
+        );
+      });
+      return updatedMarkers;
+    });
+  }, [users]);
 
-  // const filterMarkers = () => {
-  //   const filteredMarkers = markers.filter((marker) => {
-  //     return (
-  //       getDistance(
-  //         location.coords.latitude,
-  //         location.coords.longitude,
-  //         marker.latitude,
-  //         marker.longitude
-  //       ) <= 500
-  //     );
-  //   });
-  // };
-  // if (location?.coords?.latitude && location?.coords?.longitude) {
-  //   filterMarkers();
-  // }
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const unsub = onSnapshot(collection(db, "users"), (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        const docId = change.doc.id;
+        if (docId === user?.id) {
+          return;
+        }
+        if (change.type === "added") {
+          setUsers((users) => {
+            if (!users.find((user) => user.id === change.doc.data().id)) {
+              return [...users, change.doc.data()];
+            }
+            return users;
+          });
+        }
+        if (change.type === "modified") {
+          console.log(
+            "modified",
+            change.doc.data().location.latitude,
+            change.doc.data().location.longitude
+          );
+
+          setUsers((users) =>
+            users.map((user) => {
+              if (user.id === change.doc.data().id) {
+                if (!user.location) {
+                  return change.doc.data();
+                } else if (!change.doc.data().location) {
+                  return change.doc.data();
+                } else if (
+                  user.location.latitude !==
+                    change.doc.data().location.latitude ||
+                  user.location.longitude !==
+                    change.doc.data().location.longitude
+                ) {
+                  return change.doc.data();
+                }
+              }
+
+              return user;
+            })
+          );
+        }
+      });
+    });
+    return () => {
+      unsub();
+    };
+  }, [user]);
   return (
     <View style={styles.container}>
       <MapView
         ref={mapRef}
         region={{
-          latitude: location?.coords?.latitude,
-          longitude: location?.coords?.longitude,
+          latitude: 17.3900753,
+          longitude: 78.3489628,
           latitudeDelta: 0.001,
           longitudeDelta: 0.0016,
         }}
@@ -114,14 +200,16 @@ export default function Map() {
         provider={PROVIDER_GOOGLE}
         initialRegion={INITIAL_REGION}
         showsUserLocation
+        showsMyLocationButton
+        showsCompass={false}
       >
         {markers.map((marker, index) => (
           <Marker
             key={marker.id}
             onPress={() => handleMarkerPress(index)}
             coordinate={{
-              latitude: marker.latitude,
-              longitude: marker.longitude,
+              latitude: marker.location.latitude,
+              longitude: marker.location.longitude,
             }}
             image={
               selectedMarker === index
@@ -150,7 +238,6 @@ export default function Map() {
           <FlatList
             data={markers}
             horizontal
-            pagingEnabled
             showsHorizontalScrollIndicator={false}
             renderItem={({ item, index }) => (
               <MapUserView
@@ -161,13 +248,11 @@ export default function Map() {
             )}
             keyExtractor={(item) => item.id}
             ref={flatListRef}
-            getItemLayout={(_, index) => {
-              return {
-                length: Dimensions.get("window").width,
-                offset: Dimensions.get("window").width * index,
-                index,
-              };
-            }}
+            getItemLayout={(data, index) => ({
+              length: wp(100),
+              offset: wp(90) * index,
+              index,
+            })}
           />
         </View>
       )}
@@ -190,5 +275,3 @@ export const INITIAL_REGION = {
   latitudeDelta: 0.0001,
   longitudeDelta: 0.0008,
 };
-
-// open google maps app with directions from react native app

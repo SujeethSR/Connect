@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
@@ -7,7 +7,9 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import * as Location from "expo-location";
+import { Alert } from "react-native";
 
 // Create the AuthContext
 export const AuthContext = createContext();
@@ -17,15 +19,32 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(undefined);
 
-  const [loading, setLoading] = useState(true);
+  const [location, setLocation] = useState(null);
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert("Permission to access location was denied");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    })();
+  }, []);
 
   // Listen for user authentication changes
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
       if (user) {
+        console.log("🔥 User Authenticated => ", user.email);
         setIsAuthenticated(true);
-        setUser(user);
+        setUser({ ...user, id: user.uid });
+        // fetch back the user details from firebase and update the user state with the new data
+        fetchUser(user.uid);
       } else {
+        console.log("😓 Not Auth => ");
+
         setIsAuthenticated(false);
         setUser(null);
       }
@@ -35,7 +54,33 @@ export const AuthProvider = ({ children }) => {
     };
   }, []);
 
-  // Sign up a new user
+  // get user location every 10 seconds and update it in firebase database (if user is logged in)
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      if (user) {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") {
+          Alert.alert(
+            "Location Access Blocked",
+            "Please Allow Location Access in Settings"
+          );
+          return;
+        }
+        let location = await Location.getCurrentPositionAsync({});
+        const userRef = doc(db, "users", user.id);
+        await updateDoc(userRef, {
+          location: {
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+            timestamp: new Date(),
+          },
+        });
+      }
+    }, 10000);
+    return () => clearInterval(interval);
+  }, [user]);
+
   const register = async (email, password) => {
     try {
       const response = await createUserWithEmailAndPassword(
@@ -43,12 +88,14 @@ export const AuthProvider = ({ children }) => {
         email,
         password
       );
-      console.log("🔥 New User => ", response?.user);
+      console.log("🔥 New User => ", email);
       // create a new user in the database with the response.user.uid if you want more details
-      // await setDoc(doc(db, "users", response?.user.uid), {
-      //   email: response?.user.email,
-      //   uid: response?.user.uid,
-      // });
+      await setDoc(doc(db, "users", response?.user.uid), {
+        email: response?.user.email,
+        name: response?.user.email.split("@")[0],
+        id: response?.user.uid,
+        profileUrl: "https://picsum.photos/seed/696/3000/2000",
+      });
       return { success: true, user: response?.user };
     } catch (e) {
       const msg = handleFirebaseError(e);
@@ -89,15 +136,27 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const fetchUser = async (uid) => {
+    const userRef = doc(db, "users", uid);
+    const docSnap = await getDoc(userRef);
+    if (docSnap.exists()) {
+      setUser(docSnap.data());
+    } else {
+      // doc.data() will be undefined in this case
+      console.error("No such document!");
+    }
+  };
+
   // Provide the AuthContext value to the children components
   const authContextValue = {
     user,
+    setUser,
     isAuthenticated,
-    loading,
     register,
     login,
     logout,
     resetPassword,
+    location,
   };
 
   return (
