@@ -13,3 +13,15 @@ export const saveProfileUrl = async (id, url) => {
     return { success: false, msg: e.message };
   }
 };
+export const updateProflie = async (id, data) => {
+  try {
+    const userRef = doc(db, "users", id);
+    await updateDoc(userRef, {
+      ...data,
+    });
+    return { success: true };
+  } catch (e) {
+    console.log(e);
+    return { success: false, msg: e.message };
+  }
+};

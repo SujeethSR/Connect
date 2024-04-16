@@ -16,6 +16,7 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "../../firebase";
+import { mapsStyles } from "../../constants/data";
 let count = 0;
 export default function Map() {
   const [selectedMarker, setSelectedMarker] = useState("");
@@ -47,7 +48,7 @@ export default function Map() {
 
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c; // Distance in meters
-    console.log("Distance", distance);
+    // console.log("Distance", distance);
     return distance;
   };
 
@@ -92,7 +93,6 @@ export default function Map() {
       });
     }
   };
-
   useEffect(() => {
     if (!user?.id) return;
 
@@ -106,12 +106,10 @@ export default function Map() {
       setUsers(users);
     })();
   }, [user]);
-
   //memoize the markers array to avoid unnecessary re-renders
   useEffect(() => {
     if (users.length === 0) return;
 
-    console.log("Render Count => ", count++);
     setMarkers((prevMarkers) => {
       const updatedMarkers = users.filter((user) => {
         const lat = new RegExp("^[-+]?([1-8]?\\d(\\.\\d+)?|90(\\.0+)?)$");
@@ -122,8 +120,7 @@ export default function Map() {
           user?.location &&
           lat.test(user.location.latitude) &&
           long.test(user.location.longitude)
-          // &&
-          // getDistance(
+          // && getDistance(
           //   location.coords.latitude,
           //   location.coords.longitude,
           //   user.location.latitude,
@@ -153,12 +150,6 @@ export default function Map() {
           });
         }
         if (change.type === "modified") {
-          console.log(
-            "modified",
-            change.doc.data().location.latitude,
-            change.doc.data().location.longitude
-          );
-
           setUsers((users) =>
             users.map((user) => {
               if (user.id === change.doc.data().id) {
@@ -196,10 +187,10 @@ export default function Map() {
           latitudeDelta: 0.001,
           longitudeDelta: 0.0016,
         }}
+        customMapStyle={mapsStyles}
         style={styles.map}
-        provider={PROVIDER_GOOGLE}
         initialRegion={INITIAL_REGION}
-        showsUserLocation
+        showsUserLocation={location !== null}
         showsMyLocationButton
         showsCompass={false}
       >
@@ -233,7 +224,7 @@ export default function Map() {
             }}
             onPress={() => setShowInfo(false)}
           >
-            <FontAwesome name="close" size={32} color="black" />
+            <FontAwesome name="close" size={32} color="white" />
           </Pressable>
           <FlatList
             data={markers}

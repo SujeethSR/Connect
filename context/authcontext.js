@@ -94,7 +94,8 @@ export const AuthProvider = ({ children }) => {
         email: response?.user.email,
         name: response?.user.email.split("@")[0],
         id: response?.user.uid,
-        profileUrl: "https://picsum.photos/seed/696/3000/2000",
+        profileUrl:
+          "https://cdn3d.iconscout.com/3d/premium/thumb/user-3711728-3105450.png?f=webp",
       });
       return { success: true, user: response?.user };
     } catch (e) {

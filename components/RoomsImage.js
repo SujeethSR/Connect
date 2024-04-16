@@ -29,7 +29,7 @@ import RNText from "./RNText";
 
 // Firebase sets some timeers for a long period, which will trigger some warnings. Let's turn that off for this example
 
-export default class ProfileImage extends React.Component {
+export default class RoomsImage extends React.Component {
   //fetch userId from props
 
   state = {
@@ -84,8 +84,8 @@ export default class ProfileImage extends React.Component {
             backgroundColor: "rgba(0,0,0,0.4)",
             alignItems: "center",
             justifyContent: "center",
-            height: hp(30),
-            width: wp(80),
+            height: hp(15),
+            width: wp(50),
           }}
         >
           <ActivityIndicator color="#fff" animating size="large" />
@@ -168,13 +168,10 @@ export default class ProfileImage extends React.Component {
       if (!pickerResult.cancelled) {
         const uploadUrl = await uploadImageAsync(
           pickerResult.assets[0].uri,
-          this.props.id
+          Date.now().toString(36)
         );
         this.setState({ image: uploadUrl });
-        const response = await saveProfileUrl(this.props.id, uploadUrl);
-        if (response) {
-          this.props.upateProfile(uploadUrl);
-        }
+        this.props.upateProfile(uploadUrl);
       }
     } catch (e) {
       console.log(e);

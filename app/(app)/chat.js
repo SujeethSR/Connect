@@ -2,10 +2,6 @@ import React, { useState, useEffect, useCallback, useContext } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { Bubble, GiftedChat, Send } from "react-native-gifted-chat";
 
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import { AuthContext } from "../../context/authcontext";
 import { useLocalSearchParams, useNavigation } from "expo-router";
@@ -30,9 +26,10 @@ const ChatScreen = () => {
 
   const { name, id, profileUrl } = useLocalSearchParams();
   const [loading, setLoading] = useState(false);
-
+  const profileUrlU = profileUrl?.includes("firebase")
+    ? profileUrl.toString().replace(/\/(?=[^\/]*$)/, "%2F")
+    : profileUrl;
   const navigation = useNavigation();
-
   React.useEffect(() => {
     navigation.setOptions({
       headerTitle: name,
@@ -43,30 +40,26 @@ const ChatScreen = () => {
     });
   }, [navigation]);
 
-  //*fetch messages from firebase chat and set it to messages or create new chat if not exists
   useEffect(() => {
     setLoading(true);
     (async () => {
-      const docRef = doc(db, "chats", getChatId(user.id, id));
+      const docRef = doc(db, "chats", getChatId(user?.id, id));
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        const { messages } = docSnap.data();
-        console.log("Messages Fetch for ", user.name);
-        // setMessages(messages);
       } else {
         console.log("Creating New Chat");
         setDoc(doc(db, "chats", getChatId(user.id, id)), {
           chatId: getChatId(user.id, id),
           membersDetails: [
             {
-              name: user.name,
-              id: user.id,
-              profileUrl: user.profileUrl,
+              name: user?.name,
+              id: user?.id,
+              profileUrl: user?.profileUrl,
             },
             {
               name: name,
               id: id,
-              profileUrl: profileUrl,
+              profileUrl: profileUrlU,
             },
           ],
           members: [user.id, id],
@@ -79,13 +72,26 @@ const ChatScreen = () => {
     })();
   }, []);
 
-  useEffect(
-    () =>
-      onSnapshot(doc(db, "chats", getChatId(user.id, id)), (snapshot) =>
-        setMessages(snapshot.data()?.messages)
-      ),
-    [db]
-  );
+  // useEffect(
+  //   () =>
+  //     onSnapshot(
+  //       doc(db, "chats", getChatId(user.id, id)),
+  //       (snapshot) =>
+  //         snapshot.exists() && setMessages(snapshot.data()?.messages)
+  //     ),
+  //   []
+  // );
+
+  useEffect(() => {
+    const docRef = doc(db, "chats", getChatId(user.id, id));
+    const unsubscribe = onSnapshot(docRef, (doc) => {
+      if (doc.exists()) {
+        const { messages } = doc.data();
+        setMessages(messages);
+      }
+    });
+    return unsubscribe;
+  }, []);
 
   const updateDocument = useCallback(async (messages = []) => {
     const docRef = doc(db, "chats", getChatId(user.id, id));
@@ -169,7 +175,7 @@ const ChatScreen = () => {
           }}
           source={
             currentMessage?.user?.profileUrl ||
-            "https://picsum.photos/seed/696/3000/2000"
+            "https://cdn3d.iconscout.com/3d/premium/thumb/user-3711728-3105450.png?f=webp"
           }
           placeholder={blurhash}
           transition={500}

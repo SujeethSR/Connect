@@ -1,6 +1,6 @@
 import { Image } from "expo-image";
 import React from "react";
-import { Text, View, FlatList, TouchableOpacity } from "react-native";
+import { View, FlatList, TouchableOpacity } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -8,18 +8,22 @@ import {
 import { blurhash } from "../constants";
 import dayjs from "dayjs";
 import { router } from "expo-router";
+import { SegmentedButtons } from "react-native-paper";
+import RNText from "./RNText";
+
 var relativeTime = require("dayjs/plugin/relativeTime");
 
 dayjs.extend(relativeTime);
-
-const Item = ({ name, details }) => (
+const Item = ({ name, image, roomId }) => (
   <TouchableOpacity
     className="items-center flex-1"
     style={{
       marginBottom: 10,
     }}
     onPress={() => {
-      // router.push("/chat?name=" + name + " Room");
+      router.push(
+        "/room?name=" + name + " Room" + "&roomId=" + roomId + "&image=" + image
+      );
     }}
   >
     <View
@@ -27,7 +31,7 @@ const Item = ({ name, details }) => (
       style={{
         marginBottom: 5,
         width: wp(45),
-        height: hp(20),
+        height: hp(16),
       }}
     >
       <Image
@@ -35,24 +39,21 @@ const Item = ({ name, details }) => (
           height: "100%",
           borderRadius: 10,
           aspectRatio: 1,
-          backgroundColor: "#0553",
         }}
-        source={
-          "https://api.dicebear.com/7.x/avataaars-neutral/svg?seed=" + name
-        }
+        source={image}
         placeholder={blurhash}
         transition={500}
       />
     </View>
-    <Text
+    <RNText
       className="text-center"
+      font={"Poppins-Medium"}
       style={{
         fontSize: 16,
-        fontFamily: "Poppins-Bold",
       }}
     >
       {name}
-    </Text>
+    </RNText>
   </TouchableOpacity>
 );
 
@@ -61,7 +62,7 @@ const RoomList = (props) => {
   const renderItem = ({ item }) => {
     // when no input, show all
     if (props.searchPhrase === "") {
-      return <Item name={item.name} details={item.details} />;
+      return <Item name={item.name} image={item.image} roomId={item.roomId} />;
     }
     // filter of the name
     if (
@@ -69,29 +70,43 @@ const RoomList = (props) => {
         .toUpperCase()
         .includes(props.searchPhrase.toUpperCase().trim().replace(/\s/g, ""))
     ) {
-      return <Item name={item.name} details={item.details} />;
-    }
-    // filter of the description
-    if (
-      item.details
-        .toUpperCase()
-        .includes(props.searchPhrase.toUpperCase().trim().replace(/\s/g, ""))
-    ) {
-      return <Item name={item.name} details={item.details} />;
+      return <Item name={item.name} image={item.image} roomId={item.roomId} />;
     }
   };
+  const [value, setValue] = React.useState("");
 
   return (
     <View
-      className="p-2"
+      className="p-2 pt-0"
       style={{
         paddingBottom: 60,
         paddingHorizontal: 15,
       }}
     >
+      <SegmentedButtons
+        style={{
+          marginBottom: 15,
+        }}
+        value={value}
+        onValueChange={setValue}
+        buttons={[
+          {
+            value: "",
+            label: "All",
+          },
+          {
+            value: "friends",
+            label: "Friends",
+          },
+          {
+            value: "community",
+            label: "Community",
+          },
+        ]}
+      />
       <FlatList
         showsVerticalScrollIndicator={false}
-        data={props.data}
+        data={props.data.filter((item) => item.type === value || value === "")}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         //make two columns and space between them

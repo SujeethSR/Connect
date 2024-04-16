@@ -1,6 +1,6 @@
 import { Image } from "expo-image";
 import React from "react";
-import { StyleSheet, Text, View, FlatList, Pressable } from "react-native";
+import { StyleSheet, View, FlatList, Pressable } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -9,6 +9,7 @@ import { blurhash } from "../constants";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import dayjs from "dayjs";
+import RNText from "./RNText";
 var relativeTime = require("dayjs/plugin/relativeTime");
 
 dayjs.extend(relativeTime);
@@ -24,9 +25,14 @@ const Item = ({ item }) => {
         width: wp(100),
       }}
       onPress={() => {
-        router.push(
-          "/chat?name=" + name + "&id=" + id + "&profileUrl=" + profileUrl
-        );
+        router.push({
+          pathname: "chat",
+          params: {
+            name,
+            id,
+            profileUrl,
+          },
+        });
       }}
     >
       <Image
@@ -34,9 +40,11 @@ const Item = ({ item }) => {
           height: hp(7),
           aspectRatio: 1,
           borderRadius: 50,
-          backgroundColor: "#0553",
         }}
-        source={profileUrl || "https://picsum.photos/seed/696/3000/2000"}
+        source={
+          profileUrl ||
+          "https://cdn3d.iconscout.com/3d/premium/thumb/user-3711728-3105450.png?f=webp"
+        }
         placeholder={blurhash}
         transition={200}
       />
@@ -45,43 +53,36 @@ const Item = ({ item }) => {
           marginLeft: 10,
         }}
       >
-        <Text
+        <RNText
           className="text-lg "
           style={{
             fontFamily: "Poppins-Bold",
           }}
         >
           {name}
-        </Text>
+        </RNText>
         {lastMessage ? (
-          <Text
-            className="font-semibold text-gray-700"
-            style={{
-              fontFamily: "Poppins-Medium",
-            }}
+          <RNText
+            className="text-gray-700"
+            font={"Poppins-Medium"}
             numberOfLines={1}
           >
             {id !== lastMessage?.user._id && (
               <Ionicons name="checkmark" size={16} color={"#2e64e5"} />
             )}
             {lastMessage.text}
-          </Text>
+          </RNText>
         ) : (
-          <Text
-            className="font-semibold text-gray-700"
-            style={{
-              fontFamily: "Poppins-Medium",
-            }}
-          >
+          <RNText className="text-gray-700" font={"Poppins-Medium"}>
             No messages yet
-          </Text>
+          </RNText>
         )}
       </View>
-      <Text className="self-start text-gray-500 " style={styles.input}>
-        <Text className=" text-gray-500 text-xs mb-4">
+      <RNText className="self-start text-gray-500 " style={styles.input}>
+        <RNText className=" text-gray-500 text-xs mb-4">
           ({dayjs(lastUpdated).fromNow()})
-        </Text>
-      </Text>
+        </RNText>
+      </RNText>
     </Pressable>
   );
 };

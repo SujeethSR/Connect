@@ -1,7 +1,6 @@
 import React, { Children } from "react";
 import {
   View,
-  Text,
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,

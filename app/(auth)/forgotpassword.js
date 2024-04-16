@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { View, TextInput, Button, Alert, Text, Pressable } from "react-native";
+import { View, TextInput, Button, Alert, Pressable } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -9,6 +9,7 @@ import loginImg from "../../assets/svg/login";
 import Loading from "../../components/Loading";
 import { AuthContext } from "../../context/authcontext";
 import { useRouter } from "expo-router";
+import RNText from "../../components/RNText";
 const ForgotPasswordScreen = () => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -53,19 +54,19 @@ const ForgotPasswordScreen = () => {
           <SvgXml key={`login`} xml={loginImg} width={200} height={200} />
         </View>
         <View className="flex items-center">
-          <Text className="text-4xl font-bold">Reset Password</Text>
+          <RNText className="text-4xl ">Reset Password</RNText>
         </View>
-        <Text className="font-bold">Email</Text>
+        <RNText className="">Email</RNText>
         <TextInput
           placeholder="test@test.com"
           className="border-2 -mt-2 border-gray-300 rounded-md p-2 w-full"
           value={email}
           onChangeText={setEmail}
         />
-        <Text className="text-md">
+        <RNText className="text-md">
           Please enter your registered email address. You will receive a link to
           create a new password via email.
-        </Text>
+        </RNText>
         <View>
           {loading ? (
             <View className="flex-row justify-center">
@@ -77,12 +78,12 @@ const ForgotPasswordScreen = () => {
                 className="bg-black rounded-md"
                 onPress={handleResetPassword}
               >
-                <Text
+                <RNText
                   style={{ fontSize: hp(2.2) }}
-                  className="text-white font-bold tracking-wide text-center p-2 rounded-md"
+                  className="text-white  tracking-wide text-center p-2 rounded-md"
                 >
                   Reset
-                </Text>
+                </RNText>
               </Pressable>
               <Pressable
                 className="bg-blue-500 rounded-md mt-4"
@@ -90,12 +91,12 @@ const ForgotPasswordScreen = () => {
                   router.replace("/signin");
                 }}
               >
-                <Text
+                <RNText
                   style={{ fontSize: hp(2.2) }}
-                  className="text-white font-bold tracking-wide text-center p-2 rounded-md"
+                  className="text-white  tracking-wide text-center p-2 rounded-md"
                 >
                   Back
-                </Text>
+                </RNText>
               </Pressable>
             </>
           )}

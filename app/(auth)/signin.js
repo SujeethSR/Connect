@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react";
 import {
   View,
   TextInput,
-  Text,
   Pressable,
   Alert,
   TouchableOpacity,
@@ -18,6 +17,8 @@ import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { AuthContext } from "../../context/authcontext";
 import { useRouter } from "expo-router";
 import CustomKeyboardView from "../../components/CustomKeybordView";
+import RNText from "../../components/RNText";
+
 const SignIn = () => {
   const { login } = useContext(AuthContext);
   const [email, setEmail] = useState("");
@@ -57,16 +58,16 @@ const SignIn = () => {
         <View className="flex items-center">
           <SvgXml key={`login`} xml={loginImg} width={200} height={200} />
         </View>
-        <Text className="text-4xl font-bold">Sign In</Text>
+        <RNText className="text-4xl ">Sign In</RNText>
         <View className="flex-1 gap-4">
-          <Text className=" font-bold">Email</Text>
+          <RNText className=" ">Email</RNText>
           <TextInput
             placeholder="test@test.com"
             className="border-2 -mt-2 border-gray-300 rounded-md p-2 w-full"
             value={email}
             onChangeText={setEmail}
           />
-          <Text className=" font-bold">Password</Text>
+          <RNText className=" ">Password</RNText>
 
           <View className="relative">
             <TextInput
@@ -82,9 +83,9 @@ const SignIn = () => {
                 router.replace("/forgotpassword");
               }}
             >
-              <Text className="text-right font-medium my-1">
+              <RNText className="text-right my-1" font={"Poppins-Medium"}>
                 Forgot password?
-              </Text>
+              </RNText>
             </Pressable>
 
             <Pressable
@@ -110,29 +111,26 @@ const SignIn = () => {
                 className="bg-blue-500 rounded-md"
                 onPress={handleSignIn}
               >
-                <Text
+                <RNText
                   style={{ fontSize: hp(2.2) }}
-                  className="text-white font-bold tracking-wide text-center p-2 rounded-md"
+                  className="text-white  tracking-wide text-center p-2 rounded-md"
                 >
                   Sign In
-                </Text>
+                </RNText>
               </Pressable>
             )}
           </View>
 
           <View className="flex-row justify-between items-center">
-            <Text className="text-gray-500">Don't have an account? </Text>
+            <RNText className="text-gray-500">Don't have an account? </RNText>
             <TouchableOpacity
               onPress={() => {
                 router.replace("/signup");
               }}
             >
-              <Text
-                style={{ color: "#3B82F6" }}
-                className="text-blue-500 font-bold"
-              >
+              <RNText style={{ color: "#3B82F6" }} className="text-blue-500 ">
                 Sign Up
-              </Text>
+              </RNText>
             </TouchableOpacity>
           </View>
         </View>

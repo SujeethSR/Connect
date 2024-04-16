@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react";
 import {
   View,
   TextInput,
-  Text,
   Pressable,
   Alert,
   TouchableOpacity,
@@ -18,6 +17,8 @@ import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { AuthContext } from "../../context/authcontext";
 import { useRouter } from "expo-router";
 import CustomKeyboardView from "../../components/CustomKeybordView";
+import RNText from "../../components/RNText";
+
 const SignUp = () => {
   const { register } = useContext(AuthContext);
   const [email, setEmail] = useState("");
@@ -61,16 +62,16 @@ const SignUp = () => {
         <View className="flex items-center">
           <SvgXml key={`login`} xml={loginImg} width={200} height={200} />
         </View>
-        <Text className="text-4xl font-bold">Sign Up</Text>
+        <RNText className="text-4xl ">Sign Up</RNText>
         <View className="flex-1 gap-4">
-          <Text className=" font-bold">Email</Text>
+          <RNText className=" ">Email</RNText>
           <TextInput
             placeholder="test@test.com"
             className="border-2 -mt-2 border-gray-300 rounded-md p-2 w-full"
             value={email}
             onChangeText={setEmail}
           />
-          <Text className=" font-bold">Password</Text>
+          <RNText className=" ">Password</RNText>
 
           <View className="relative">
             <TextInput
@@ -103,29 +104,26 @@ const SignUp = () => {
                 className="bg-blue-500 rounded-md"
                 onPress={handleSignIn}
               >
-                <Text
+                <RNText
                   style={{ fontSize: hp(2.2) }}
-                  className="text-white font-bold tracking-wide text-center p-2 rounded-md"
+                  className="text-white  tracking-wide text-center p-2 rounded-md"
                 >
                   Sign Up
-                </Text>
+                </RNText>
               </Pressable>
             )}
           </View>
 
           <View className="flex-row justify-between items-center">
-            <Text className="text-gray-500">Already have an account? </Text>
+            <RNText className="text-gray-500">Already have an account? </RNText>
             <TouchableOpacity
               onPress={() => {
                 router.replace("/signin");
               }}
             >
-              <Text
-                style={{ color: "#3B82F6" }}
-                className="text-blue-500 font-bold"
-              >
+              <RNText style={{ color: "#3B82F6" }} className="text-blue-500 ">
                 Sign In
-              </Text>
+              </RNText>
             </TouchableOpacity>
           </View>
         </View>

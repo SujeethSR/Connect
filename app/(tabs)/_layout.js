@@ -4,6 +4,7 @@ import Colors from "../../constants/Colors";
 import HomeHeader from "../../components/HomeHeader";
 import { Entypo } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
+import { Icon } from "react-native-paper";
 
 export default function TabsLayout() {
   return (
@@ -19,34 +20,37 @@ export default function TabsLayout() {
             backgroundColor: Colors.background,
           },
           headerShadowVisible: false,
+          //hide title from tabs
+          tabBarShowLabel: false,
         }}
       >
+        <Tabs.Screen
+          name="map"
+          options={{
+            headerTitle: "Home",
+            headerShown: false,
+            title: "Home",
+
+            tabBarIcon: ({ size, color }) => (
+              <Entypo name="map" size={size} color={color} />
+            ),
+          }}
+        />
         <Tabs.Screen
           name="messages"
           options={{
             headerTitle: "Messages",
             title: "Messages",
             headerTitleAlign: "center",
-            //change header font family
             headerTitleStyle: {
-              fontFamily: "Poppins-Bold",
+              fontFamily: "Poppins-Medium",
             },
             tabBarIcon: ({ size, color }) => (
               <Entypo name="chat" size={size} color={color} />
             ),
           }}
         />
-        <Tabs.Screen
-          name="map"
-          options={{
-            headerTitle: "Maps",
-            headerShown: false,
-            title: "Maps",
-            tabBarIcon: ({ size, color }) => (
-              <Entypo name="map" size={size} color={color} />
-            ),
-          }}
-        />
+
         <Tabs.Screen
           name="rooms"
           options={{
@@ -54,23 +58,12 @@ export default function TabsLayout() {
             title: "Rooms",
             headerTitleAlign: "center",
             headerTitleStyle: {
-              fontFamily: "Poppins-Bold",
+              fontFamily: "Poppins-Medium",
             },
             // add icon at the right side of the header
-            headerRight: () => (
-              <AntDesign
-                name="addusergroup"
-                size={28}
-                color={Colors.primary}
-                style={{ marginRight: 20 }}
-                onPress={() => {
-                  console.log("add user group");
-                }}
-              />
-            ),
 
             tabBarIcon: ({ size, color }) => (
-              <MaterialIcons name="groups" size={size + 5} color={color} />
+              <Icon source="home-group" size={size + 4} color={color} />
             ),
           }}
         />

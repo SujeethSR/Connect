@@ -39,7 +39,7 @@ const HomeHeader = () => {
         source={
           user?.profileUrl
             ? user?.profileUrl
-            : "https://picsum.photos/seed/696/3000/2000"
+            : "https://cdn3d.iconscout.com/3d/premium/thumb/user-3711728-3105450.png?f=webp"
         }
         placeholder={blurhash}
         transition={500}

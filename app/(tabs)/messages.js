@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Text } from "react-native";
 import SearchBar from "../../components/SearchBar";
 import List from "../../components/MessagesList";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "../../firebase";
 import { AuthContext } from "../../context/authcontext";
+import RNText from "../../components/RNText";
 
 const Messages = () => {
   const [searchPhrase, setSearchPhrase] = useState("");
@@ -49,7 +49,7 @@ const Messages = () => {
         setClicked={setClicked}
       />
       {messages.length <= 0 ? (
-        <Text className="text-center text-lg font-bold">No Chats</Text>
+        <RNText className="text-center text-lg ">No Chats</RNText>
       ) : (
         <List
           searchPhrase={searchPhrase}
