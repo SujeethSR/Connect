@@ -59,6 +59,7 @@ const Rooms = () => {
       onSnapshot(
         query(collection(db, "rooms"), orderBy("lastUpdated", "desc")),
         (snapshot) => {
+          let idx = 0;
           const snapMessages = snapshot.docs.map((doc) => {
             const { roomId, type, lastUpdated, name, image } = doc.data();
 
@@ -68,6 +69,7 @@ const Rooms = () => {
               lastUpdated,
               name,
               image,
+              idx: idx++,
             };
           });
           setRooms(snapMessages);
@@ -105,7 +107,13 @@ const Rooms = () => {
     }
   };
   return (
-    <>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: "#fff",
+        paddingHorizontal: 16,
+      }}
+    >
       <SearchBar
         searchPhrase={searchPhrase}
         setSearchPhrase={setSearchPhrase}
@@ -113,7 +121,12 @@ const Rooms = () => {
         setClicked={setClicked}
       />
       {rooms.length <= 0 ? (
-        <View className="flex-1 justify-center">
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+          }}
+        >
           <ActivityIndicator size="large" color="#2e64e5" />
         </View>
       ) : (
@@ -144,7 +157,14 @@ const Rooms = () => {
 
           {updateImage === false ? (
             <>
-              <View className="justify-center my-4 relative">
+              <View
+                style={{
+                  position: "relative",
+                  marginTop: 14,
+                  marginBottom: 14,
+                  justifyContent: "center",
+                }}
+              >
                 <View>
                   <Image
                     style={{
@@ -246,7 +266,7 @@ const Rooms = () => {
         color="#fff"
         onPress={showModal}
       />
-    </>
+    </View>
   );
 };
 

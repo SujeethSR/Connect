@@ -5,6 +5,7 @@ import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "../../firebase";
 import { AuthContext } from "../../context/authcontext";
 import RNText from "../../components/RNText";
+import { View } from "react-native";
 
 const Messages = () => {
   const [searchPhrase, setSearchPhrase] = useState("");
@@ -41,7 +42,13 @@ const Messages = () => {
     []
   );
   return (
-    <>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: "#fff",
+        paddingHorizontal: 16,
+      }}
+    >
       <SearchBar
         searchPhrase={searchPhrase}
         setSearchPhrase={setSearchPhrase}
@@ -49,7 +56,16 @@ const Messages = () => {
         setClicked={setClicked}
       />
       {messages.length <= 0 ? (
-        <RNText className="text-center text-lg ">No Chats</RNText>
+        <RNText
+          style={{
+            fontSize: 15.75,
+            lineHeight: 24.5,
+
+            textAlign: "center",
+          }}
+        >
+          No Chats
+        </RNText>
       ) : (
         <List
           searchPhrase={searchPhrase}
@@ -57,7 +73,7 @@ const Messages = () => {
           setClicked={setClicked}
         />
       )}
-    </>
+    </View>
   );
 };
 

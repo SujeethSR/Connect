@@ -18,6 +18,7 @@ import { router } from "expo-router";
 import { goToMaps } from "../constants/helpers";
 import dayjs from "dayjs";
 import RNText from "./RNText";
+import Colors from "../constants/Colors";
 var relativeTime = require("dayjs/plugin/relativeTime");
 
 dayjs.extend(relativeTime);
@@ -25,12 +26,13 @@ dayjs.extend(relativeTime);
 const MapUserView = ({ user, index, handleInfoClick }) => {
   return (
     <View
-      className="rounded-lg flex-row relative"
       style={{
         width: wp(88),
         height: hp(16),
         margin: 5,
         borderRadius: 10,
+        flexDirection: "row",
+        position: "relative",
       }}
     >
       <TouchableOpacity
@@ -52,20 +54,43 @@ const MapUserView = ({ user, index, handleInfoClick }) => {
           placeholder={blurhash}
           transition={500}
         />
-        <RNText className="absolute bottom-0 left-0 w-full text-center text-white text-[10px] p-1 bg-black px-3 py-1 rounded">
+        <RNText
+          style={{
+            position: "absolute",
+            bottom: "0",
+            left: "0",
+            padding: 3.5,
+            paddingLeft: 3 * 3.5,
+            paddingRight: 3 * 3.5,
+            borderRadius: 5,
+            width: "100%",
+            textAlign: "center",
+            color: "#ffffff",
+            backgroundColor: "#000000",
+            fontSize: 10,
+          }}
+        >
           Show on Map
         </RNText>
       </TouchableOpacity>
       <View
-        className="p-2 gap-2 flex-1 justify-between "
         style={{
           backgroundColor: "#ffffff",
           borderTopRightRadius: 10,
           borderBottomRightRadius: 10,
+          gap: 2,
+          flex: 1,
+          justifyContent: "space-between",
+          padding: 7,
         }}
       >
         <Pressable
-          className="items-center justify-center flex-row gap-2"
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 2,
+          }}
           onPress={() => {
             goToMaps({
               latitude: user?.location?.latitude,
@@ -74,20 +99,37 @@ const MapUserView = ({ user, index, handleInfoClick }) => {
           }}
         >
           {user?.location && (
-            <RNText className="text-gray-500 text-xs ">
+            <RNText
+              style={{
+                color: "#6B7280",
+                fontSize: 10.5,
+                lineHeight: 14,
+              }}
+            >
               <FontAwesome5 name="history" size={10} color="#1a73e8" />{" "}
               {dayjs(user?.location?.timestamp?.seconds * 1000).fromNow()}
             </RNText>
           )}
           <FontAwesome5 name="directions" size={22} color="#1a73e8" />
         </Pressable>
-        <RNText className=" text-xl text-center" font={"Poppins-Medium"}>
+        <RNText
+          style={{
+            fontSize: 17.5,
+            lineHeight: 24.5,
+            textAlign: "center",
+          }}
+          font={"M-Medium"}
+        >
           {user.name}{" "}
         </RNText>
 
-        <View className="flex-row justify-between">
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
           <Pressable
-            className="bg-blue-500 rounded-md ml-auto"
             onPress={() => {
               router.push({
                 pathname: "chat",
@@ -98,32 +140,37 @@ const MapUserView = ({ user, index, handleInfoClick }) => {
                 },
               });
             }}
+            style={{
+              backgroundColor: Colors.yellow,
+              borderWidth: 2,
+              borderBottomWidth: 5,
+
+              borderBottomColor: Colors.primary,
+              borderRadius: 5,
+              marginLeft: "auto",
+            }}
           >
             <RNText
-              className="text-white  tracking-wide text-sm text-center rounded-md"
-              style={{ padding: 6 }}
+              style={{
+                padding: 6,
+
+                color: "#111",
+                fontSize: 12.25,
+                lineHeight: 17.5,
+                textAlign: "center",
+                borderRadius: 5,
+              }}
+              font={"M-Bold"}
             >
               Message
             </RNText>
           </Pressable>
           <Pressable
-            className="bg-black rounded-md  "
+            style={{
+              backgroundColor: "#111",
+              borderRadius: 5,
+            }}
             onPress={() => {
-              // set the user to the router params and navigate to profile route
-              // router.push(
-              //   "/profile?friend=" +
-              //     user.name +
-              //     "&id=" +
-              //     user.id +
-              //     "&profileUrl=" +
-              //     user?.profileUrl +
-              //     "&phone=" +
-              //     user?.phone +
-              //     "&about=" +
-              //     user?.about +
-              //     "&gender = " +
-              //     user?.gender
-              // );
               router.push({
                 pathname: "profile",
                 params: {
@@ -137,8 +184,15 @@ const MapUserView = ({ user, index, handleInfoClick }) => {
             }}
           >
             <RNText
-              className="text-white  tracking-wide text-sm text-center rounded-md"
-              style={{ padding: 6 }}
+              style={{
+                padding: 6,
+                color: "#fff",
+                fontSize: 12.25,
+                lineHeight: 17.5,
+                textAlign: "center",
+                borderRadius: 5,
+              }}
+              font={"M-Bold"}
             >
               View Profile
             </RNText>

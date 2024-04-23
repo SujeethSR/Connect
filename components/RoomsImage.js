@@ -50,25 +50,51 @@ export default class RoomsImage extends React.Component {
   render() {
     return (
       <View
-        style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-        className="gap-4"
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 4,
+        }}
       >
         {/* {this._maybeRenderImage()} */}
         {this._maybeRenderUploadingOverlay()}
 
         <Pressable
-          className="bg-black rounded-md w-full "
+          style={{
+            backgroundColor: "#000",
+            width: "100%",
+            borderRadius: 5,
+          }}
           onPress={this._pickImage}
         >
-          <RNText className="text-white  tracking-wide text-center p-2 rounded-md">
+          <RNText
+            style={{
+              color: "white",
+              textAlign: "center",
+              padding: 7,
+              borderRadius: 5,
+            }}
+          >
             Pick an image from camera roll
           </RNText>
         </Pressable>
         <Pressable
-          className="bg-blue-500 rounded-md w-full "
           onPress={this._takePhoto}
+          style={{
+            borderRadius: 5,
+            width: "100%",
+            backgroundColor: "#3B82F6",
+          }}
         >
-          <RNText className="text-white  tracking-wide text-center p-2 rounded-md">
+          <RNText
+            style={{
+              padding: 7,
+              borderRadius: 5,
+              textAlign: "center",
+              color: "#ffffff",
+            }}
+          >
             Take a photo
           </RNText>
         </Pressable>

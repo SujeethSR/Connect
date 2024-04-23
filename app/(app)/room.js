@@ -29,7 +29,7 @@ const RoomScreen = () => {
       headerTitle: name,
       headerTitleAlign: "center",
       headerTitleStyle: {
-        fontFamily: "Poppins-Medium",
+        fontFamily: "M-Medium",
       },
     });
   }, [navigation]);
@@ -147,7 +147,12 @@ const RoomScreen = () => {
   };
   if (loading) {
     return (
-      <View className="flex-1 justify-center">
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+        }}
+      >
         <ActivityIndicator size="large" color="#2e64e5" />
       </View>
     );

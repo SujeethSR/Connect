@@ -1,23 +1,19 @@
 import React, { useContext, useState } from "react";
-import {
-  View,
-  TextInput,
-  Pressable,
-  Alert,
-  TouchableOpacity,
-} from "react-native";
+import { View, Pressable, Alert, TouchableOpacity } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { SvgXml } from "react-native-svg";
-import loginImg from "../../assets/svg/login";
+import LogoImg from "../../assets/app/logo.png";
 import Loading from "../../components/Loading";
-import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { AuthContext } from "../../context/authcontext";
 import { useRouter } from "expo-router";
 import CustomKeyboardView from "../../components/CustomKeybordView";
 import RNText from "../../components/RNText";
+import { Image } from "expo-image";
+import { TextInput } from "react-native-paper";
+import RNTextInput from "../../components/RNTextInput";
+import Colors from "../../constants/Colors";
 
 const SignIn = () => {
   const { login } = useContext(AuthContext);
@@ -52,68 +48,122 @@ const SignIn = () => {
         style={{
           paddingTop: hp(8),
           paddingHorizontal: wp(5),
+          flex: 1,
+          gap: 8,
         }}
-        className="flex-1 gap-8"
       >
-        <View className="flex items-center">
-          <SvgXml key={`login`} xml={loginImg} width={200} height={200} />
+        <View
+          style={{
+            height: hp(30),
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Image source={LogoImg} style={{ width: wp(35), aspectRatio: 1 }} />
+
+          <RNText
+            font={"M-ExtraBold"}
+            style={{
+              fontSize: 31.5,
+              lineHeight: 35,
+              marginTop: 14,
+              textAlign: "center",
+              position: "absolute",
+              bottom: 0,
+            }}
+          >
+            Login
+          </RNText>
         </View>
-        <RNText className="text-4xl ">Sign In</RNText>
-        <View className="flex-1 gap-4">
-          <RNText className=" ">Email</RNText>
-          <TextInput
-            placeholder="test@test.com"
-            className="border-2 -mt-2 border-gray-300 rounded-md p-2 w-full"
+
+        <View
+          style={{
+            gap: 8,
+            marginTop: hp(5),
+          }}
+        >
+          <RNTextInput
+            placeholder="Email address"
+            mode="outlined"
             value={email}
             onChangeText={setEmail}
+            outlineStyle={{
+              borderWidth: 2.5,
+              borderColor: "#111",
+              borderRadius: 10,
+            }}
+            left={<TextInput.Icon icon="account" />}
           />
-          <RNText className=" ">Password</RNText>
 
-          <View className="relative">
-            <TextInput
-              placeholder="*********"
+          <View
+            style={{
+              position: "relative",
+            }}
+          >
+            <RNTextInput
+              placeholder="Password"
+              mode="outlined"
               secureTextEntry={hidePassword ? true : false}
-              className="border-2 -mt-2 border-gray-300 rounded-md p-2 w-full"
               value={password}
               onChangeText={setPassword}
+              outlineStyle={{
+                borderWidth: 2.5,
+                borderColor: "#111",
+                borderRadius: 10,
+              }}
+              left={<TextInput.Icon icon="lock" />}
+              right={
+                <TextInput.Icon
+                  icon={hidePassword ? "eye" : "eye-off"}
+                  onPress={() => setHidePassword(!hidePassword)}
+                />
+              }
             />
 
             <Pressable
               onPress={() => {
-                router.replace("/forgotpassword");
+                router.push("/forgotpassword");
               }}
             >
-              <RNText className="text-right my-1" font={"Poppins-Medium"}>
+              <RNText
+                style={{
+                  textAlign: "right",
+                  marginTop: 3.5,
+                }}
+                font={"M-Medium"}
+              >
                 Forgot password?
               </RNText>
-            </Pressable>
-
-            <Pressable
-              onPress={() => {
-                setHidePassword(!hidePassword);
-              }}
-              className="absolute right-5 top-2 z-10"
-            >
-              {hidePassword ? (
-                <AntDesign name="eye" size={20} color="black" />
-              ) : (
-                <FontAwesome name="eye-slash" size={20} color="black" />
-              )}
             </Pressable>
           </View>
           <View>
             {loading ? (
-              <View className="flex-row justify-center">
-                <Loading size={hp(6.5)} className="" />
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                }}
+              >
+                <Loading size={hp(6.5)} />
               </View>
             ) : (
               <Pressable
-                className="bg-blue-500 rounded-md"
+                style={{
+                  backgroundColor: "#111",
+                  borderRadius: 5,
+                  padding: 7,
+                }}
                 onPress={handleSignIn}
               >
                 <RNText
-                  style={{ fontSize: hp(2.2) }}
-                  className="text-white  tracking-wide text-center p-2 rounded-md"
+                  font={"M-Bold"}
+                  style={{
+                    fontSize: hp(2.2),
+                    color: "#fff",
+                    textAlign: "center",
+                    padding: 7,
+                  }}
                 >
                   Sign In
                 </RNText>
@@ -121,15 +171,24 @@ const SignIn = () => {
             )}
           </View>
 
-          <View className="flex-row justify-between items-center">
-            <RNText className="text-gray-500">Don't have an account? </RNText>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: 14,
+            }}
+          >
+            <RNText style={{ color: "#6B7280" }} font={"M-Medium"}>
+              You are new?{" "}
+            </RNText>
             <TouchableOpacity
               onPress={() => {
-                router.replace("/signup");
+                router.push("/signup");
               }}
             >
-              <RNText style={{ color: "#3B82F6" }} className="text-blue-500 ">
-                Sign Up
+              <RNText style={{ color: Colors.red }} font={"M-Bold"}>
+                Create New
               </RNText>
             </TouchableOpacity>
           </View>

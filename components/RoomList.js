@@ -10,15 +10,17 @@ import dayjs from "dayjs";
 import { router } from "expo-router";
 import { SegmentedButtons } from "react-native-paper";
 import RNText from "./RNText";
+import Colors from "../constants/Colors";
 
 var relativeTime = require("dayjs/plugin/relativeTime");
 
 dayjs.extend(relativeTime);
-const Item = ({ name, image, roomId }) => (
+const Item = ({ name, image, roomId, idx }) => (
   <TouchableOpacity
-    className="items-center flex-1"
     style={{
       marginBottom: 10,
+      flex: 1,
+      alignItems: "center",
     }}
     onPress={() => {
       router.push(
@@ -27,16 +29,22 @@ const Item = ({ name, image, roomId }) => (
     }}
   >
     <View
-      className="items-center"
       style={{
         marginBottom: 5,
         width: wp(45),
-        height: hp(16),
+        height: hp(20),
+        backgroundColor: getBackgroundColor(idx),
+        borderRadius: 10,
+        padding: 10,
+        borderWidth: 2,
+        borderColor: "#111",
+        gap: 5,
+        alignItems: "center",
       }}
     >
       <Image
         style={{
-          height: "100%",
+          height: "75%",
           borderRadius: 10,
           aspectRatio: 1,
         }}
@@ -44,43 +52,55 @@ const Item = ({ name, image, roomId }) => (
         placeholder={blurhash}
         transition={500}
       />
+      <RNText
+        font={"M-Bold"}
+        style={{
+          textAlign: "center",
+
+          fontSize: 16,
+        }}
+      >
+        {name}
+      </RNText>
     </View>
-    <RNText
-      className="text-center"
-      font={"Poppins-Medium"}
-      style={{
-        fontSize: 16,
-      }}
-    >
-      {name}
-    </RNText>
   </TouchableOpacity>
 );
 
 // the filter
 const RoomList = (props) => {
   const renderItem = ({ item }) => {
-    // when no input, show all
     if (props.searchPhrase === "") {
-      return <Item name={item.name} image={item.image} roomId={item.roomId} />;
+      return (
+        <Item
+          name={item.name}
+          image={item.image}
+          roomId={item.roomId}
+          idx={item.idx}
+        />
+      );
     }
     // filter of the name
     if (
       item.name
         .toUpperCase()
-        .includes(props.searchPhrase.toUpperCase().trim().replace(/\s/g, ""))
+        .includes(props.searchPhrase?.toUpperCase().trim().replace(/\s/g, ""))
     ) {
-      return <Item name={item.name} image={item.image} roomId={item.roomId} />;
+      return (
+        <Item
+          name={item.name}
+          image={item.image}
+          roomId={item.roomId}
+          idx={item.idx}
+        />
+      );
     }
   };
   const [value, setValue] = React.useState("");
 
   return (
     <View
-      className="p-2 pt-0"
       style={{
         paddingBottom: 60,
-        paddingHorizontal: 15,
       }}
     >
       <SegmentedButtons
@@ -91,16 +111,41 @@ const RoomList = (props) => {
         onValueChange={setValue}
         buttons={[
           {
+            labelStyle: {
+              fontFamily: "M-Bold",
+              color: value === "" ? "white" : "black",
+            },
             value: "",
+
             label: "All",
+            style: value === "" && {
+              backgroundColor: Colors.blue,
+              borderColor: Colors.blue,
+            },
           },
           {
+            labelStyle: {
+              fontFamily: "M-Bold",
+              color: value === "friends" ? "white" : "black",
+            },
             value: "friends",
             label: "Friends",
+            style: value === "friends" && {
+              backgroundColor: Colors.green,
+              borderColor: Colors.green,
+            },
           },
           {
+            labelStyle: {
+              fontFamily: "M-Bold",
+              color: value === "community" ? "white" : "black",
+            },
             value: "community",
             label: "Community",
+            style: value === "community" && {
+              backgroundColor: Colors.red,
+              borderColor: Colors.red,
+            },
           },
         ]}
       />
@@ -120,3 +165,9 @@ const RoomList = (props) => {
 };
 
 export default RoomList;
+
+const getBackgroundColor = (number) => {
+  const colors = [Colors.yellow, Colors.pink, Colors.red, Colors.green];
+
+  return colors[number % 4];
+};

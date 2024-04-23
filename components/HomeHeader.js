@@ -23,8 +23,9 @@ const HomeHeader = () => {
         top: top,
         left: wp(5),
         zIndex: 100,
+        flexDirection: "row",
+        justifyContent: "space-between",
       }}
-      className="flex-row justify-between"
       onPress={() => {
         router.push("/profile");
       }}

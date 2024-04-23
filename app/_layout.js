@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { Slot, Stack, useRouter, useSegments } from "expo-router";
-import "../global.css";
 import { AuthProvider, useAuth } from "../context/authcontext";
 import { useFonts } from "expo-font";
 import {
@@ -26,7 +25,7 @@ const MainLayout = () => {
         // Pop from stack until one element is left
         router.back();
       }
-      router.replace("/signin");
+      router.replace("/onboarding");
     }
   }, [isAuthenticated]);
 
@@ -34,6 +33,24 @@ const MainLayout = () => {
     <Stack>
       <Stack.Screen
         name="index"
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="(auth)/onboarding"
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="(auth)/onboarding2"
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="(auth)/onboarding3"
         options={{
           headerShown: false,
         }}
@@ -93,7 +110,17 @@ const RootLayout = () => {
     "Poppins-ExtraBold": require("../assets/fonts/Poppins/Poppins-ExtraBold.ttf"),
     "Poppins-Thin": require("../assets/fonts/Poppins/Poppins-Thin.ttf"),
     "Poppins-Black": require("../assets/fonts/Poppins/Poppins-Black.ttf"),
+    "M-Regular": require("../assets/fonts/Montserrat/Montserrat-Regular.ttf"),
+    "M-Bold": require("../assets/fonts/Montserrat/Montserrat-Bold.ttf"),
+    "M-SemiBold": require("../assets/fonts/Montserrat/Montserrat-SemiBold.ttf"),
+    "M-Medium": require("../assets/fonts/Montserrat/Montserrat-Medium.ttf"),
+    "M-Light": require("../assets/fonts/Montserrat/Montserrat-Light.ttf"),
+    "M-ExtraLight": require("../assets/fonts/Montserrat/Montserrat-ExtraLight.ttf"),
+    "M-ExtraBold": require("../assets/fonts/Montserrat/Montserrat-ExtraBold.ttf"),
+    "M-Thin": require("../assets/fonts/Montserrat/Montserrat-Thin.ttf"),
+    "M-Black": require("../assets/fonts/Montserrat/Montserrat-Black.ttf"),
   });
+
   if (!fontsLoaded && !fontError) {
     return null;
   }

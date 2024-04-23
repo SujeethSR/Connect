@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { View, TextInput, Button, Alert, Pressable } from "react-native";
+import { View, Button, Alert, Pressable, ScrollView } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -10,17 +10,22 @@ import Loading from "../../components/Loading";
 import { AuthContext } from "../../context/authcontext";
 import { useRouter } from "expo-router";
 import RNText from "../../components/RNText";
+import ForgotPass from "../../assets/app/forgot-password.png";
+import { Image } from "expo-image";
+import RNTextInput from "../../components/RNTextInput";
+import { TextInput } from "react-native-paper";
+import Colors from "../../constants/Colors";
+
 const ForgotPasswordScreen = () => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const { resetPassword } = useContext(AuthContext);
   const router = useRouter();
   const handleResetPassword = async () => {
-    //allow email that only have @mavs.uta.edu
-    // if (!email.includes("@mavs.uta.edu")) {
-    //   Alert.alert("SignUp", "Please use your UTA email");
-    //   return;
-    // }
+    if (!email.includes("@mavs.uta.edu")) {
+      Alert.alert("SignUp", "Please use your UTA email");
+      return;
+    }
     setLoading(true);
     const status = await resetPassword(email);
     setLoading(false);
@@ -42,67 +47,133 @@ const ForgotPasswordScreen = () => {
   };
 
   return (
-    <View className="flex-1">
+    <ScrollView
+      style={{
+        flex: 1,
+      }}
+    >
       <View
         style={{
-          paddingTop: hp(8),
-          paddingHorizontal: wp(5),
+          flex: 1,
+          gap: 14,
         }}
-        className="flex-1 gap-4"
       >
-        <View className="flex items-center">
-          <SvgXml key={`login`} xml={loginImg} width={200} height={200} />
+        <View
+          style={{
+            backgroundColor: Colors.yellow,
+            paddingTop: hp(8),
+            maxHeight: hp(40),
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Image
+            source={ForgotPass}
+            style={{ width: wp(67), aspectRatio: 1 }}
+          />
         </View>
-        <View className="flex items-center">
-          <RNText className="text-4xl ">Reset Password</RNText>
-        </View>
-        <RNText className="">Email</RNText>
-        <TextInput
-          placeholder="test@test.com"
-          className="border-2 -mt-2 border-gray-300 rounded-md p-2 w-full"
-          value={email}
-          onChangeText={setEmail}
-        />
-        <RNText className="text-md">
-          Please enter your registered email address. You will receive a link to
-          create a new password via email.
-        </RNText>
-        <View>
-          {loading ? (
-            <View className="flex-row justify-center">
-              <Loading size={hp(6.5)} className="" />
-            </View>
-          ) : (
-            <>
-              <Pressable
-                className="bg-black rounded-md"
-                onPress={handleResetPassword}
-              >
-                <RNText
-                  style={{ fontSize: hp(2.2) }}
-                  className="text-white  tracking-wide text-center p-2 rounded-md"
-                >
-                  Reset
-                </RNText>
-              </Pressable>
-              <Pressable
-                className="bg-blue-500 rounded-md mt-4"
-                onPress={() => {
-                  router.replace("/signin");
+        <View
+          style={{
+            paddingHorizontal: wp(5),
+            paddingTop: hp(2),
+            flex: 1,
+            gap: hp(2),
+          }}
+        >
+          <RNText
+            font={"M-ExtraBold"}
+            style={{
+              fontSize: 31.5,
+              lineHeight: 35,
+              marginTop: 14,
+              textAlign: "center",
+            }}
+          >
+            Forgot Password
+          </RNText>
+          <RNTextInput
+            placeholder="Email address"
+            mode="outlined"
+            value={email}
+            onChangeText={setEmail}
+            outlineStyle={{
+              borderWidth: 2.5,
+              borderColor: "#111",
+              borderRadius: 10,
+            }}
+            left={<TextInput.Icon icon="account" />}
+          />
+          <RNText font={"M-Medium"}>
+            Please enter your registered email address. You will receive a link
+            to create a new password via email.
+          </RNText>
+          <View>
+            {loading ? (
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
                 }}
               >
-                <RNText
-                  style={{ fontSize: hp(2.2) }}
-                  className="text-white  tracking-wide text-center p-2 rounded-md"
+                <Loading size={hp(6.5)} />
+              </View>
+            ) : (
+              <>
+                <Pressable
+                  onPress={handleResetPassword}
+                  style={{
+                    backgroundColor: "#111",
+                    padding: 7,
+                    borderRadius: 5,
+                  }}
                 >
-                  Back
-                </RNText>
-              </Pressable>
-            </>
-          )}
+                  <RNText
+                    font={"M-ExtraBold"}
+                    style={{
+                      fontSize: hp(2.2),
+                      color: "#fff",
+                      textAlign: "center",
+                      padding: 7,
+                      borderRadius: 5,
+                    }}
+                  >
+                    Reset
+                  </RNText>
+                </Pressable>
+                <Pressable
+                  style={{
+                    backgroundColor: Colors.red,
+                    borderWidth: 2,
+                    borderBottomWidth: 5,
+                    borderBottomColor: Colors.primary,
+                    padding: 7,
+                    borderRadius: 5,
+                    marginTop: 7,
+                  }}
+                  onPress={() => {
+                    router.replace("/signin");
+                  }}
+                >
+                  <RNText
+                    font={"M-ExtraBold"}
+                    style={{
+                      fontSize: hp(2.2),
+                      color: "#fff",
+                      textAlign: "center",
+                      padding: 7,
+                      borderRadius: 5,
+                    }}
+                  >
+                    Back
+                  </RNText>
+                </Pressable>
+              </>
+            )}
+          </View>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

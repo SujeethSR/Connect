@@ -9,30 +9,29 @@ const SearchBar = (props) => {
   return (
     <View style={styles.container}>
       <View style={styles.searchBar__unclicked}>
-        <Feather
-          name="search"
-          size={20}
-          color="black"
-          className="absolute"
-          style={{ left: 10 }}
-        />
         <TextInput
           style={styles.input}
-          placeholder="Search"
+          placeholder="Search with love..."
           value={props.searchPhrase}
           onChangeText={props.setSearchPhrase}
         />
 
-        {props.searchPhrase.length > 0 && (
+        {props.searchPhrase.length > 0 ? (
           <Entypo
             name="cross"
             size={20}
             color="black"
-            className="absolute"
-            style={{ right: 10 }}
+            style={{ right: 10, position: "absolute" }}
             onPress={() => {
               props.setSearchPhrase("");
             }}
+          />
+        ) : (
+          <Feather
+            name="search"
+            size={20}
+            color="black"
+            style={{ right: 10, position: "absolute" }}
           />
         )}
       </View>
@@ -44,28 +43,32 @@ export default SearchBar;
 
 const styles = StyleSheet.create({
   container: {
-    margin: 10,
+    marginVertical: 16,
     justifyContent: "flex-start",
     alignItems: "center",
     flexDirection: "row",
-    width: wp(100),
+    width: wp(94),
     position: "relative",
   },
   searchBar__unclicked: {
     padding: 6,
-    paddingHorizontal: 20,
+    paddingRight: 20,
     flexDirection: "row",
     width: "95%",
-    backgroundColor: "#d9dbda",
+    backgroundColor: "#fff",
     borderRadius: 15,
     alignItems: "center",
     justifyContent: "space-evenly",
+    // add bottom border to the search bar
+    borderWidth: 1.5,
+    borderBottomWidth: 3.5,
+    bordereColor: "#111",
   },
 
   input: {
     fontSize: hp(2.2),
     width: "90%",
     fontWeight: "bold",
-    fontFamily: "Poppins-SemiBold",
+    fontFamily: "M-SemiBold",
   },
 });

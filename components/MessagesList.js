@@ -18,11 +18,13 @@ const Item = ({ item }) => {
   const { name, id, profileUrl, lastMessage, lastUpdated } = item;
   return (
     <Pressable
-      className="mb-3 p-2 flex-row   items-center"
       style={{
-        marginBottom: 10,
+        marginBottom: 15,
         minHeight: 40,
-        width: wp(100),
+        width: wp(92),
+        alignItems: "center",
+        flexDirection: "row",
+        padding: 3.5,
       }}
       onPress={() => {
         router.push({
@@ -37,7 +39,7 @@ const Item = ({ item }) => {
     >
       <Image
         style={{
-          height: hp(7),
+          height: hp(6),
           aspectRatio: 1,
           borderRadius: 50,
         }}
@@ -50,21 +52,22 @@ const Item = ({ item }) => {
       />
       <View
         style={{
-          marginLeft: 10,
+          marginLeft: 12,
         }}
       >
         <RNText
-          className="text-lg "
           style={{
-            fontFamily: "Poppins-Bold",
+            fontFamily: "M-Bold",
+            fontSize: 17.5,
+            lineHeight: 24.5,
           }}
         >
           {name}
         </RNText>
         {lastMessage ? (
           <RNText
-            className="text-gray-700"
-            font={"Poppins-Medium"}
+            style={{ color: "#374151" }}
+            font={"M-Medium"}
             numberOfLines={1}
           >
             {id !== lastMessage?.user._id && (
@@ -73,13 +76,20 @@ const Item = ({ item }) => {
             {lastMessage.text}
           </RNText>
         ) : (
-          <RNText className="text-gray-700" font={"Poppins-Medium"}>
+          <RNText style={{ color: "#374151" }} font={"M-Medium"}>
             No messages yet
           </RNText>
         )}
       </View>
-      <RNText className="self-start text-gray-500 " style={styles.input}>
-        <RNText className=" text-gray-500 text-xs mb-4">
+      <RNText style={styles.input}>
+        <RNText
+          style={{
+            fontSize: 10.5,
+            lineHeight: 14,
+            color: "#6B7280",
+            marginBottom: 14,
+          }}
+        >
           ({dayjs(lastUpdated).fromNow()})
         </RNText>
       </RNText>
@@ -97,16 +107,8 @@ const List = (props) => {
     // filter of the name
     if (
       item.name
-        .toUpperCase()
-        .includes(props.searchPhrase.toUpperCase().trim().replace(/\s/g, ""))
-    ) {
-      return <Item item={item} />;
-    }
-    // filter of the description
-    if (
-      item.lastMessage
-        .toUpperCase()
-        .includes(props.searchPhrase.toUpperCase().trim().replace(/\s/g, ""))
+        ?.toUpperCase()
+        .includes(props.searchPhrase?.toUpperCase().trim().replace(/\s/g, ""))
     ) {
       return <Item item={item} />;
     }
@@ -114,8 +116,8 @@ const List = (props) => {
 
   return (
     <View
-      className="p-2"
       style={{
+        padding: 7,
         paddingBottom: 60,
       }}
     >
@@ -136,6 +138,8 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginLeft: "auto",
     marginRight: 10,
-    fontFamily: "Poppins-SemiBold",
+    fontFamily: "M-SemiBold",
+    alignSelf: "flex-start",
+    color: "#6B7280",
   },
 });

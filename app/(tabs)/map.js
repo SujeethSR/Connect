@@ -6,7 +6,7 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import MapUserView from "../../components/MapUserView";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { AuthContext } from "../../context/authcontext";
 import {
   collection,
@@ -17,7 +17,9 @@ import {
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import { mapsStyles } from "../../constants/data";
-let count = 0;
+import { Image } from "expo-image";
+import RNText from "../../components/RNText";
+import { Button, IconButton } from "react-native-paper";
 export default function Map() {
   const [selectedMarker, setSelectedMarker] = useState("");
   const { location, user } = useContext(AuthContext);
@@ -25,6 +27,12 @@ export default function Map() {
   const [users, setUsers] = useState([]);
   const [markers, setMarkers] = useState([]);
 
+  const [mapRegion, setMapRegion] = useState({
+    latitude: 17.3900753,
+    longitude: 78.3489628,
+    latitudeDelta: 0.001,
+    longitudeDelta: 0.0016,
+  });
   const flatListRef = useRef(null);
 
   const [timer, setTimer] = useState(null);
@@ -119,13 +127,13 @@ export default function Map() {
         return (
           user?.location &&
           lat.test(user.location.latitude) &&
-          long.test(user.location.longitude)
-          // && getDistance(
-          //   location.coords.latitude,
-          //   location.coords.longitude,
-          //   user.location.latitude,
-          //   user.location.longitude
-          // ) <= 1000
+          long.test(user.location.longitude) &&
+          getDistance(
+            location.coords.latitude,
+            location.coords.longitude,
+            user.location.latitude,
+            user.location.longitude
+          ) <= 1000
         );
       });
       return updatedMarkers;
@@ -179,19 +187,36 @@ export default function Map() {
   }, [user]);
   return (
     <View style={styles.container}>
+      <View
+        style={{
+          position: "absolute",
+          top: 35,
+          left: 10,
+          zIndex: 999,
+          flexDirection: "row",
+          alignItems: "center",
+        }}
+      >
+        <Image
+          source={require("../../assets/app/logo.png")}
+          style={{
+            width: wp(14),
+            aspectRatio: 1,
+          }}
+        />
+        <RNText style={{ color: "black", fontSize: 24 }} font={"M-Bold"}>
+          onnect
+        </RNText>
+      </View>
+
       <MapView
         ref={mapRef}
-        region={{
-          latitude: 17.3900753,
-          longitude: 78.3489628,
-          latitudeDelta: 0.001,
-          longitudeDelta: 0.0016,
-        }}
+        region={mapRegion}
         customMapStyle={mapsStyles}
         style={styles.map}
         initialRegion={INITIAL_REGION}
         showsUserLocation={location !== null}
-        showsMyLocationButton
+        showsMyLocationButton={false}
         showsCompass={false}
       >
         {markers.map((marker, index) => (
@@ -211,16 +236,36 @@ export default function Map() {
             ref={markerRefs[index]}
           />
         ))}
+        {/* create a button and when user clicks move to users location */}
       </MapView>
+      <IconButton
+        style={{
+          position: "absolute",
+          bottom: 10,
+          right: 10,
+          backgroundColor: "white",
+        }}
+        icon={"crosshairs-gps"}
+        onPress={() => {
+          mapRef.current.animateToRegion({
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+            latitudeDelta: 0.0001,
+            longitudeDelta: 0.0008,
+          });
+        }}
+      ></IconButton>
 
       {showInfo && (
-        <View style={{ position: "absolute", bottom: 10 }} className="px-2">
+        <View
+          style={{ position: "absolute", bottom: 10, paddingHorizontal: 7 }}
+        >
           <Pressable
-            className="absolute"
             style={{
               right: 20,
               top: -30,
               zIndex: 10,
+              position: "absolute",
             }}
             onPress={() => setShowInfo(false)}
           >

@@ -98,13 +98,34 @@ const Profile = () => {
           flex: 1,
         }}
       >
-        <Pressable className="self-end" onPress={handleClose}>
+        <Pressable
+          onPress={handleClose}
+          style={{
+            alignSelf: "flex-end",
+          }}
+        >
           <MaterialCommunityIcons name="close" size={30} color="black" />
         </Pressable>
-        <RNText className="text-2xl text-center my-2" font={"Poppins-Medium"}>
+        <RNText
+          style={{
+            textTransform: "capitalize",
+            marginTop: 7,
+            marginBottom: 7,
+
+            textAlign: "center",
+          }}
+          font={"M-Medium"}
+        >
           {friend.split(" ")[0]} Proflie Details
         </RNText>
-        <View className="flex-row justify-center my-4">
+        <View
+          style={{
+            marginTop: 14,
+            marginBottom: 14,
+            flexDirection: "row",
+            justifyContent: "center",
+          }}
+        >
           <Image
             style={{
               height: hp(20),
@@ -117,7 +138,12 @@ const Profile = () => {
           />
         </View>
 
-        <View className="justify-center items-center">
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <List.Section
             style={{
               width: widthPercentageToDP(70),
@@ -126,17 +152,20 @@ const Profile = () => {
             <List.Item
               title="Full Name"
               description={friend}
+              descriptionStyle={{
+                textTransform: "capitalize",
+              }}
               left={() => <List.Icon icon="account" />}
             />
             <List.Item
               title="Gender"
-              description={friendGender || ""}
+              description={friendGender || "Not Available"}
               left={() => <List.Icon icon="gender-male-female" />}
             />
             <List.Item
-              title="Phone"
-              description={friendPhone || "No phone number"}
-              left={() => <List.Icon icon="phone" />}
+              title="Department"
+              description={friendPhone || "No Department Available"}
+              left={() => <List.Icon icon="office-building" />}
             />
             <List.Item
               title="About"
@@ -157,20 +186,39 @@ const Profile = () => {
             flex: 1,
           }}
         >
-          <View className="flex-row justify-between">
-            <Pressable className="self-start flex-row" onPress={logout}>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            <Pressable
+              style={{ flexDirection: "row", alignSelf: "flex-start" }}
+              onPress={logout}
+            >
               <MaterialIcons name="logout" size={24} color="black" />
             </Pressable>
-            <Pressable className="self-end" onPress={handleClose}>
+            <Pressable style={{ alignSelf: "flex-end" }} onPress={handleClose}>
               <MaterialCommunityIcons name="close" size={30} color="black" />
             </Pressable>
           </View>
 
-          <RNText className="text-2xl  text-center">{user?.email}</RNText>
+          <RNText
+            style={{
+              fontSize: 26.25,
+              lineHeight: 31.5,
+              textAlign: "center",
+            }}
+          >
+            {user?.email}
+          </RNText>
 
           {updateImage === false ? (
             <>
-              <View className="flex-row justify-center my-4">
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  marginVertical: 14,
+                }}
+              >
                 <Image
                   style={{
                     height: hp(20),
@@ -187,16 +235,30 @@ const Profile = () => {
                   transition={500}
                 />
               </View>
-              <View className="flex-row justify-center">
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                }}
+              >
                 <Pressable
-                  className="bg-black rounded-md w-2/4 "
+                  style={{
+                    borderRadius: 5,
+                    width: "50%",
+                    backgroundColor: "#000000",
+                  }}
                   onPress={() => {
                     setUpdateImage(true);
                   }}
                 >
                   <RNText
-                    style={{ fontSize: hp(1.8) }}
-                    className="text-white  tracking-wide text-center p-2 rounded-md"
+                    style={{
+                      fontSize: hp(1.8),
+                      textAlign: "center",
+                      color: "#fff",
+                      padding: 7,
+                      borderRadius: 5,
+                    }}
                   >
                     Update Image
                   </RNText>
@@ -214,18 +276,25 @@ const Profile = () => {
             </View>
           )}
 
-          <View className="gap-3.5">
-            <RNText className="tracking-wide" font="Poppins-Bold">
-              Name
-            </RNText>
+          <View
+            style={{
+              gap: 3.5 * 3.5,
+            }}
+          >
+            <RNText font="M-Bold">Name</RNText>
             <TextInput
-              className="border-2 -mt-2 border-gray-300 rounded-md p-2 w-full"
+              style={{
+                padding: 7,
+                marginTop: -7,
+                borderRadius: 5,
+                borderWidth: 2,
+                borderColor: "#D1D5DB",
+                width: "100%",
+              }}
               value={name}
               onChangeText={setName}
             />
-            <RNText className="tracking-wide" font="Poppins-Bold">
-              Gender
-            </RNText>
+            <RNText font="M-Bold">Gender</RNText>
             <View
               style={{
                 flexDirection: "row",
@@ -250,11 +319,11 @@ const Profile = () => {
                 }}
               >
                 <RNText
-                  className=" text-center"
                   style={{
                     color: gender === "male" ? "#fff" : "#111",
+                    textAlign: "center",
                   }}
-                  font={"Poppins-Bold"}
+                  font={"M-Bold"}
                 >
                   Male
                 </RNText>
@@ -276,32 +345,42 @@ const Profile = () => {
                 }}
               >
                 <RNText
-                  className=" text-center"
                   style={{
                     color: gender === "female" ? "#fff" : "#111",
+                    textAlign: "center",
                   }}
-                  font={"Poppins-Bold"}
+                  font={"M-Bold"}
                 >
                   Female
                 </RNText>
               </TouchableOpacity>
             </View>
 
-            <RNText className="tracking-wide" font="Poppins-Bold">
-              Phone Number
-            </RNText>
+            <RNText font="M-Bold">Department</RNText>
             <TextInput
-              placeholder="your number"
-              className="border-2 -mt-2 border-gray-300 rounded-md p-2 w-full"
+              placeholder="your deptartment.."
+              style={{
+                padding: 7,
+                marginTop: -7,
+                borderRadius: 5,
+                borderWidth: 2,
+                borderColor: "#D1D5DB",
+                width: "100%",
+              }}
               value={phone}
               onChangeText={setPhone}
             />
-            <RNText className="tracking-wide" font="Poppins-Bold">
-              About You
-            </RNText>
+            <RNText font="M-Bold">About You</RNText>
             <TextInput
               placeholder="Write about yourself.."
-              className="border-2 -mt-2 border-gray-300 rounded-md p-2 w-full"
+              style={{
+                padding: 7,
+                marginTop: -7,
+                borderRadius: 5,
+                borderWidth: 2,
+                borderColor: "#D1D5DB",
+                width: "100%",
+              }}
               value={bio}
               onChangeText={setBio}
               numberOfLines={4}
@@ -310,17 +389,30 @@ const Profile = () => {
 
             <View>
               {loading ? (
-                <View className="flex-row justify-center">
-                  <Loading size={hp(6.5)} className="" />
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Loading size={hp(6.5)} />
                 </View>
               ) : (
                 <Pressable
-                  className="bg-blue-500 rounded-md"
+                  style={{
+                    borderRadius: 5,
+                    backgroundColor: "#3B82F6",
+                  }}
                   onPress={handleUpdateProfile}
                 >
                   <RNText
-                    style={{ fontSize: hp(2.2) }}
-                    className="text-white  tracking-wide text-center p-2 rounded-md"
+                    style={{
+                      fontSize: hp(2.2),
+                      color: "#fff",
+                      padding: 7,
+                      borderRadius: 5,
+                      textAlign: "center",
+                    }}
                   >
                     Save
                   </RNText>

@@ -50,25 +50,53 @@ export default class ProfileImage extends React.Component {
   render() {
     return (
       <View
-        style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-        className="gap-4"
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 4,
+        }}
       >
         {/* {this._maybeRenderImage()} */}
         {this._maybeRenderUploadingOverlay()}
 
         <Pressable
-          className="bg-black rounded-md w-full "
           onPress={this._pickImage}
+          style={{
+            backgroundColor: "#000",
+            borderRadius: 5,
+            width: "100%",
+          }}
         >
-          <RNText className="text-white  tracking-wide text-center p-2 rounded-md">
+          <RNText
+            style={{
+              fontSize: hp(2.2),
+              color: "#fff",
+              textAlign: "center",
+              padding: 7,
+              borderRadius: 5,
+            }}
+          >
             Pick an image from camera roll
           </RNText>
         </Pressable>
         <Pressable
-          className="bg-blue-500 rounded-md w-full "
           onPress={this._takePhoto}
+          style={{
+            borderRadius: 5,
+            width: "100%",
+            backgroundColor: "#3B82F6",
+          }}
         >
-          <RNText className="text-white  tracking-wide text-center p-2 rounded-md">
+          <RNText
+            style={{
+              fontSize: hp(2.2),
+              color: "#fff",
+              textAlign: "center",
+              padding: 7,
+              borderRadius: 5,
+            }}
+          >
             Take a photo
           </RNText>
         </Pressable>

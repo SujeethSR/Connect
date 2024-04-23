@@ -20,6 +20,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
+import Colors from "../../constants/Colors";
 const ChatScreen = () => {
   const [messages, setMessages] = useState([]);
   const { user } = useContext(AuthContext);
@@ -35,7 +36,7 @@ const ChatScreen = () => {
       headerTitle: name,
       headerTitleAlign: "center",
       headerTitleStyle: {
-        fontFamily: "Poppins-Bold",
+        fontFamily: "M-Bold",
       },
     });
   }, [navigation]);
@@ -132,15 +133,27 @@ const ChatScreen = () => {
           {...props}
           wrapperStyle={{
             right: {
-              backgroundColor: "#2e64e5",
+              backgroundColor: Colors.green,
+              borderWidth: 1.5,
             },
             left: {
-              backgroundColor: "#fff",
+              backgroundColor: Colors.yellow,
+              borderWidth: 1.5,
             },
           }}
           textStyle={{
             right: {
-              color: "#fff",
+              color: "#000",
+              fontFamily: "M-Bold",
+            },
+            left: {
+              color: "#000",
+              fontFamily: "M-Bold",
+            },
+          }}
+          timeTextStyle={{
+            right: {
+              color: "#000",
             },
             left: {
               color: "#000",
@@ -185,8 +198,13 @@ const ChatScreen = () => {
   };
   if (loading) {
     return (
-      <View className="flex-1 justify-center">
-        <ActivityIndicator size="large" color="#2e64e5" />
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+        }}
+      >
+        <ActivityIndicator size="large" color={Colors.primary} />
       </View>
     );
   }
