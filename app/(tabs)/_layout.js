@@ -33,18 +33,6 @@ export default function TabsLayout() {
         }}
       >
         <Tabs.Screen
-          name="map"
-          options={{
-            headerTitle: "Home",
-            headerShown: false,
-            title: "Home",
-
-            tabBarIcon: ({ size, color }) => (
-              <Entypo name="map" size={size} color={color} />
-            ),
-          }}
-        />
-        <Tabs.Screen
           name="friends"
           options={{
             headerTitle: "Friends",
@@ -117,7 +105,7 @@ export default function TabsLayout() {
                 }}
                 color="black"
                 onPress={() => {
-                  router.replace("/map");
+                  router.replace("/messages");
                 }}
               />
             ),

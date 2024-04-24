@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "connect",
+    "name": "Connect",
     "slug": "connect",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "scheme": "connect",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/app/logo.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -20,7 +20,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/app/logo.png",
         "backgroundColor": "#ffffff"
       },
       "permissions": [
@@ -55,8 +55,9 @@
         "origin": false
       },
       "eas": {
-        "projectId": "14754dce-2051-4220-8b16-42a2dd4d9889"
+        "projectId": "9ba77f74-7483-42ab-b968-b16e67509db2"
       }
-    }
+    },
+    "owner": "sujeethsr"
   }
 }
