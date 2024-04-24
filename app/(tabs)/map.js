@@ -205,7 +205,7 @@ export default function Map() {
           }}
         />
         <RNText style={{ color: "black", fontSize: 24 }} font={"M-Bold"}>
-          onnect
+          nnect
         </RNText>
       </View>
 
