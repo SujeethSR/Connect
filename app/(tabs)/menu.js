@@ -55,21 +55,6 @@ const Menu = () => {
       >
         Privacy Policy
       </RNText>
-
-            {/* New Delete Account Link */}
-      <RNText
-        style={{
-          fontSize: 36,
-          color: Colors.blue,
-          textAlign: "center",
-        }}
-        onPress={() => {
-          Linking.openURL("https://sujeeth.vercel.app/#delete-account");
-        }}
-        font={"M-Black"}
-      >
-        Delete Account
-      </RNText>
     </View>
   );
 };
