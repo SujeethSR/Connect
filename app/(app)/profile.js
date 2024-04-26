@@ -401,7 +401,7 @@ const Profile = () => {
                 <Pressable
                   style={{
                     borderRadius: 5,
-                    backgroundColor: "#3B82F6",
+                    backgroundColor: "#ffbd12",
                   }}
                   onPress={handleUpdateProfile}
                 >

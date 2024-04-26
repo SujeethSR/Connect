@@ -49,11 +49,26 @@ const Menu = () => {
         onPress={() => {
           // router.push("/contact");
           // navigat user to https://sites.google.com/view/utaconnect/home this link on the web browser
-          Linking.openURL("https://sites.google.com/view/uta-connect-privacy-policy/home");
+          Linking.openURL("https://sites.google.com/view/utaconnect/home");
         }}
         font={"M-Black"}
       >
         Privacy Policy
+      </RNText>
+            <RNText
+        style={{
+          fontSize: 36,
+          color: Colors.blue,
+          textAlign: "center",
+        }}
+        onPress={() => {
+          // router.push("/contact");
+          // navigat user to https://sites.google.com/view/utaconnect/home this link on the web browser
+          Linking.openURL("https://sujeeth.vercel.app/#delete-account");
+        }}
+        font={"M-Black"}
+      >
+        Delete Account
       </RNText>
     </View>
   );
