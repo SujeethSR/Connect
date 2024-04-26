@@ -49,7 +49,7 @@ const Menu = () => {
         onPress={() => {
           // router.push("/contact");
           // navigat user to https://sites.google.com/view/utaconnect/home this link on the web browser
-          Linking.openURL("https://sites.google.com/view/utaconnect/home");
+          Linking.openURL("https://sites.google.com/view/uta-connect-privacy-policy/home");
         }}
         font={"M-Black"}
       >
