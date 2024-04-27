@@ -22,6 +22,7 @@ const Item = ({ name, image, roomId, idx }) => (
       flex: 1,
       alignItems: "center",
     }}
+    key={roomId}
     onPress={() => {
       router.push(
         "/room?name=" + name + " Room" + "&roomId=" + roomId + "&image=" + image
@@ -79,7 +80,6 @@ const RoomList = (props) => {
         />
       );
     }
-    // filter of the name
     if (
       item.name
         .toUpperCase()
@@ -95,7 +95,6 @@ const RoomList = (props) => {
       );
     }
   };
-  const [value, setValue] = React.useState("");
 
   return (
     <View
@@ -103,58 +102,11 @@ const RoomList = (props) => {
         paddingBottom: 60,
       }}
     >
-      <SegmentedButtons
-        style={{
-          marginBottom: 15,
-        }}
-        value={value}
-        onValueChange={setValue}
-        buttons={[
-          {
-            labelStyle: {
-              fontFamily: "M-Bold",
-              color: value === "" ? "white" : "black",
-            },
-            value: "",
-
-            label: "All",
-            style: value === "" && {
-              backgroundColor: Colors.blue,
-              borderColor: Colors.blue,
-            },
-          },
-          {
-            labelStyle: {
-              fontFamily: "M-Bold",
-              color: value === "friends" ? "white" : "black",
-            },
-            value: "friends",
-            label: "Friends",
-            style: value === "friends" && {
-              backgroundColor: Colors.green,
-              borderColor: Colors.green,
-            },
-          },
-          {
-            labelStyle: {
-              fontFamily: "M-Bold",
-              color: value === "community" ? "white" : "black",
-            },
-            value: "community",
-            label: "Community",
-            style: value === "community" && {
-              backgroundColor: Colors.red,
-              borderColor: Colors.red,
-            },
-          },
-        ]}
-      />
       <FlatList
         showsVerticalScrollIndicator={false}
-        data={props.data.filter((item) => item.type === value || value === "")}
+        data={props.data}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        //make two columns and space between them
+        keyExtractor={(item) => item.idx}
         numColumns={2}
         columnWrapperStyle={{
           justifyContent: "space-between",

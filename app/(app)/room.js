@@ -15,6 +15,8 @@ import {
   onSnapshot,
   updateDoc,
 } from "firebase/firestore";
+import RNText from "../../components/RNText";
+import Colors from "../../constants/Colors";
 const RoomScreen = () => {
   const [messages, setMessages] = useState([]);
   const { user } = useContext(AuthContext);
@@ -95,15 +97,27 @@ const RoomScreen = () => {
           {...props}
           wrapperStyle={{
             right: {
-              backgroundColor: "#2e64e5",
+              backgroundColor: Colors.green,
+              borderWidth: 1.5,
             },
             left: {
-              backgroundColor: "#fff",
+              backgroundColor: Colors.yellow,
+              borderWidth: 1.5,
             },
           }}
           textStyle={{
             right: {
-              color: "#fff",
+              color: "#000",
+              fontFamily: "M-Bold",
+            },
+            left: {
+              color: "#000",
+              fontFamily: "M-Bold",
+            },
+          }}
+          timeTextStyle={{
+            right: {
+              color: "#000",
             },
             left: {
               color: "#000",
@@ -127,6 +141,7 @@ const RoomScreen = () => {
           backgroundColor: "#fff",
           alignItems: "center",
           justifyContent: "center",
+          top: -6,
         }}
       >
         <Image
@@ -142,6 +157,18 @@ const RoomScreen = () => {
           placeholder={blurhash}
           transition={500}
         />
+        <RNText
+          font={"M-Bold"}
+          style={{
+            fontSize: 10,
+            position: "absolute",
+            width: 200,
+            bottom: -12,
+            left: -5,
+          }}
+        >
+          {currentMessage.user.name.split(" ")[0]}
+        </RNText>
       </View>
     );
   };

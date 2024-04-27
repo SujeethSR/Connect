@@ -3,14 +3,7 @@ import { ActivityIndicator, Alert, Pressable, View } from "react-native";
 import SearchBar from "../../components/SearchBar";
 import RoomList from "../../components/RoomList";
 import { fakeData } from "../../constants/data";
-import {
-  Button,
-  FAB,
-  Modal,
-  Portal,
-  SegmentedButtons,
-  TextInput,
-} from "react-native-paper";
+import { Button, FAB, Modal, Portal, TextInput } from "react-native-paper";
 import { Image } from "expo-image";
 import {
   heightPercentageToDP,
@@ -20,7 +13,6 @@ import { MaterialIcons } from "@expo/vector-icons";
 import RoomsImage from "../../components/RoomsImage";
 import { AuthContext } from "../../context/authcontext";
 import { blurhash } from "../../constants";
-import Colors from "../../constants/Colors";
 import { db } from "../../firebase";
 import {
   Timestamp,
@@ -31,7 +23,6 @@ import {
   query,
   setDoc,
 } from "firebase/firestore";
-import RNText from "../../components/RNText";
 
 const Rooms = () => {
   const { user } = useContext(AuthContext);
@@ -42,7 +33,6 @@ const Rooms = () => {
   const [roomName, setRoomName] = useState("");
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
-  const [value, setValue] = useState("friends");
   const [loading, setLoading] = useState(false);
   const [updateImage, setUpdateImage] = useState(false);
   const [image, setImage] = useState(
@@ -61,11 +51,10 @@ const Rooms = () => {
         (snapshot) => {
           let idx = 0;
           const snapMessages = snapshot.docs.map((doc) => {
-            const { roomId, type, lastUpdated, name, image } = doc.data();
+            const { roomId, lastUpdated, name, image } = doc.data();
 
             return {
               roomId,
-              type,
               lastUpdated,
               name,
               image,
@@ -86,7 +75,6 @@ const Rooms = () => {
     try {
       await setDoc(doc(db, "rooms", roomId), {
         roomId,
-        type: value,
         admin: user.id,
         name: roomName,
         image: image,
@@ -143,18 +131,6 @@ const Rooms = () => {
           onDismiss={hideModal}
           contentContainerStyle={containerStyle}
         >
-          <SegmentedButtons
-            value={value}
-            onValueChange={setValue}
-            buttons={[
-              { value: "friends", label: "For Friends" },
-              {
-                value: "community",
-                label: "For Community",
-              },
-            ]}
-          />
-
           {updateImage === false ? (
             <>
               <View
