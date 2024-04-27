@@ -103,7 +103,7 @@ Each folder is crafted to contain specific types of code:
 
 We maintain a clean repository by utilizing `.gitignore` to exclude temporary files and dependencies from our git history.
 
-## EAS Build Configuration
+# EAS Build Configuration
 
 EAS builds are configured in `eas.json`. This file defines your build profiles for different environments (e.g., development, staging, production).
 
