@@ -109,7 +109,7 @@ EAS builds are configured in `eas.json`. This file defines your build profiles f
 
 # Create your first build
 
-Check the Document [Expo.dev]([URL](https://docs.expo.dev/build/introduction/))
+Check the Document [Expo.dev](https://docs.expo.dev/build/introduction/)
 
 
 ## Install the latest EAS CLI
